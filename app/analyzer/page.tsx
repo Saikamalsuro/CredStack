@@ -2,16 +2,14 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { 
-  BarChart3, 
-  Upload, 
-  FileText, 
-  Check, 
+import {
+  BarChart3,
+  Upload,
+  FileText,
   AlertTriangle,
   TrendingUp,
   Shield,
   Percent,
-  CreditCard,
   ArrowRight
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -188,7 +186,7 @@ export default function AnalyzerPage() {
                           cx="48"
                           cy="48"
                           r="40"
-                          stroke="hsl(var(--muted))"
+                          stroke="var(--muted)"
                           strokeWidth="8"
                           fill="none"
                         />
@@ -196,7 +194,7 @@ export default function AnalyzerPage() {
                           cx="48"
                           cy="48"
                           r="40"
-                          stroke="hsl(var(--primary))"
+                          stroke="var(--primary)"
                           strokeWidth="8"
                           fill="none"
                           strokeDasharray={`${mockAnalysis.overallScore * 2.51} 251`}
