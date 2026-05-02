@@ -3,18 +3,10 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { CreditCard, Menu, X, Search, Moon, Sun, BarChart3, Sparkles, LayoutDashboard, GitCompare, LogOut, User as UserIcon } from "lucide-react"
+import { CreditCard, Menu, X, Search, Moon, Sun, BarChart3, Sparkles, LayoutDashboard, GitCompare } from "lucide-react"
 import { useState } from "react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 
 const navigation = [
@@ -26,12 +18,7 @@ const navigation = [
   { name: "Analyzer", href: "/analyzer", icon: BarChart3 },
 ]
 
-export interface HeaderUser {
-  email: string | null
-  fullName: string | null
-}
-
-export function Header({ user }: { user?: HeaderUser | null }) {
+export function Header() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { theme, setTheme } = useTheme()
@@ -40,7 +27,7 @@ export function Header({ user }: { user?: HeaderUser | null }) {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8" aria-label="Global">
         {/* Logo */}
-        <motion.div 
+        <motion.div
           className="flex lg:flex-1"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -72,7 +59,7 @@ export function Header({ user }: { user?: HeaderUser | null }) {
         </div>
 
         {/* Desktop navigation */}
-        <motion.div 
+        <motion.div
           className="hidden lg:flex lg:gap-x-1"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -86,8 +73,8 @@ export function Header({ user }: { user?: HeaderUser | null }) {
                 href={item.href}
                 className={cn(
                   "relative px-4 py-2 text-sm font-medium rounded-lg transition-colors",
-                  isActive 
-                    ? "text-primary" 
+                  isActive
+                    ? "text-primary"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 )}
               >
@@ -126,51 +113,15 @@ export function Header({ user }: { user?: HeaderUser | null }) {
             <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           </Button>
-          {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" aria-label="Account menu">
-                  <UserIcon className="h-5 w-5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>
-                  <div className="flex flex-col">
-                    <span className="font-medium truncate">{user.fullName ?? "Account"}</span>
-                    <span className="text-xs text-muted-foreground truncate">{user.email}</span>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard">Dashboard</Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className="text-destructive focus:text-destructive">
-                  <form action="/auth/signout" method="post" className="w-full">
-                    <button type="submit" className="flex items-center gap-2 w-full">
-                      <LogOut className="h-4 w-4" />
-                      Sign out
-                    </button>
-                  </form>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <>
-              <Button variant="ghost" asChild>
-                <Link href="/login">Log in</Link>
-              </Button>
-              <Button asChild className="bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-opacity">
-                <Link href="/signup">Get Started</Link>
-              </Button>
-            </>
-          )}
+          <Button asChild className="bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-opacity">
+            <Link href="/auth/sign-in">Get Started</Link>
+          </Button>
         </motion.div>
       </nav>
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <motion.div 
+        <motion.div
           className="lg:hidden"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
@@ -206,23 +157,9 @@ export function Header({ user }: { user?: HeaderUser | null }) {
                 <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                 <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               </Button>
-              {user ? (
-                <form action="/auth/signout" method="post" className="flex-1">
-                  <Button type="submit" variant="outline" className="w-full">
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Sign out
-                  </Button>
-                </form>
-              ) : (
-                <>
-                  <Button asChild variant="outline" className="flex-1">
-                    <Link href="/login">Log in</Link>
-                  </Button>
-                  <Button asChild className="flex-1 bg-gradient-to-r from-primary to-accent hover:opacity-90">
-                    <Link href="/signup">Sign up</Link>
-                  </Button>
-                </>
-              )}
+              <Button asChild className="flex-1 bg-gradient-to-r from-primary to-accent hover:opacity-90">
+                <Link href="/auth/sign-in">Get Started</Link>
+              </Button>
             </div>
           </div>
         </motion.div>

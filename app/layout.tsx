@@ -4,23 +4,22 @@ import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
-import { createServerClient } from '@/lib/db/server'
 import './globals.css'
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
   variable: '--font-inter',
   display: 'swap',
 });
 
-const poppins = Poppins({ 
+const poppins = Poppins({
   subsets: ["latin"],
   weight: ['400', '500', '600', '700'],
   variable: '--font-poppins',
   display: 'swap',
 });
 
-const geistMono = Geist_Mono({ 
+const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: '--font-geist-mono',
 });
@@ -59,16 +58,11 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const supabase = await createServerClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${poppins.variable} ${geistMono.variable}`}>
       <body className="font-sans antialiased bg-background min-h-screen flex flex-col" suppressHydrationWarning>
@@ -78,7 +72,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header user={user ? { email: user.email ?? null, fullName: (user.user_metadata?.full_name as string | undefined) ?? null } : null} />
+          <Header />
           <main className="flex-1">
             {children}
           </main>

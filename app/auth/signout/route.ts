@@ -13,5 +13,5 @@ export async function POST(request: NextRequest) {
   }
 
   revalidatePath('/', 'layout')
-  return NextResponse.redirect(new URL('/login', request.url), { status: 302 })
+  return NextResponse.redirect(new URL('/auth/sign-in', request.url), { status: 302 })
 }
