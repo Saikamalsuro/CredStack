@@ -3,10 +3,11 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { CreditCard, Menu, X, Search, Moon, Sun, BarChart3, Sparkles, LayoutDashboard, GitCompare, LogOut, UserCircle } from "lucide-react"
+import { CreditCard, Menu, X, Moon, Sun, BarChart3, Sparkles, LayoutDashboard, GitCompare, LogOut, UserCircle } from "lucide-react"
 import { useState } from "react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
+import { SearchCommand } from "@/components/layout/search-command"
 import { cn } from "@/lib/utils"
 
 const navigation = [
@@ -101,9 +102,7 @@ export function Header({ displayName }: { displayName?: string | null }) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Button variant="ghost" size="icon" aria-label="Search">
-            <Search className="h-5 w-5" />
-          </Button>
+          <SearchCommand />
           <Button
             variant="ghost"
             size="icon"
