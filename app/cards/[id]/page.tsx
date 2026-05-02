@@ -1,25 +1,24 @@
 import { notFound } from "next/navigation"
-import { getCardById, creditCards } from "@/lib/data/cards"
+import { getCardById, getCards } from "@/lib/db/cards"
 import { CardDetailsClient } from "./card-details-client"
 
 interface CardDetailsPageProps {
   params: Promise<{ id: string }>
 }
 
+export const revalidate = 86400
+
 export async function generateStaticParams() {
-  return creditCards.map((card) => ({
-    id: card.id,
-  }))
+  const cards = await getCards()
+  return cards.map((card) => ({ id: card.id }))
 }
 
 export async function generateMetadata({ params }: CardDetailsPageProps) {
   const { id } = await params
-  const card = getCardById(id)
-  
+  const card = await getCardById(id)
+
   if (!card) {
-    return {
-      title: "Card Not Found | CredStack",
-    }
+    return { title: "Card Not Found | CredStack" }
   }
 
   return {
@@ -30,11 +29,16 @@ export async function generateMetadata({ params }: CardDetailsPageProps) {
 
 export default async function CardDetailsPage({ params }: CardDetailsPageProps) {
   const { id } = await params
-  const card = getCardById(id)
+  const card = await getCardById(id)
 
   if (!card) {
     notFound()
   }
 
-  return <CardDetailsClient card={card} />
+  const all = await getCards()
+  const similarCards = all
+    .filter((c) => c.id !== card.id && c.category.some((cat) => card.category.includes(cat)))
+    .slice(0, 3)
+
+  return <CardDetailsClient card={card} similarCards={similarCards} />
 }

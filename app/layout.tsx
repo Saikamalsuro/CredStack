@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
+import { createServerClient } from '@/lib/db/server'
 import './globals.css'
 
 const inter = Inter({ 
@@ -58,21 +59,26 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const supabase = await createServerClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${poppins.variable} ${geistMono.variable}`}>
-      <body className="font-sans antialiased bg-background min-h-screen flex flex-col">
+      <body className="font-sans antialiased bg-background min-h-screen flex flex-col" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
+          <Header user={user ? { email: user.email ?? null, fullName: (user.user_metadata?.full_name as string | undefined) ?? null } : null} />
           <main className="flex-1">
             {children}
           </main>

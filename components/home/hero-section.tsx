@@ -6,11 +6,13 @@ import { ArrowRight, Sparkles, TrendingUp, Shield, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CreditCardVisual } from "@/components/cards/credit-card-visual"
-import { getFeaturedCards } from "@/lib/data/cards"
+import type { CreditCard } from "@/lib/data/cards"
 
-const floatingCards = getFeaturedCards().slice(0, 3)
+interface HeroSectionProps {
+  floatingCards: CreditCard[]
+}
 
-export function HeroSection() {
+export function HeroSection({ floatingCards }: HeroSectionProps) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-background via-muted/30 to-background py-20 lg:py-32">
       {/* Background decorations */}
