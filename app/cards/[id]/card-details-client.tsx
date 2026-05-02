@@ -141,6 +141,12 @@ export function CardDetailsClient({ card, similarCards }: CardDetailsClientProps
                   <ExternalLink className="h-4 w-4 ml-2" />
                 </Button>
                 <Button variant="outline" size="lg" asChild>
+                  <Link href={`/cards/${card.id}/add`}>
+                    <CreditCardIcon className="h-4 w-4 mr-2" />
+                    Add to Portfolio
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" asChild>
                   <Link href={`/compare?cards=${card.id}`}>
                     <GitCompare className="h-4 w-4 mr-2" />
                     Add to Compare
