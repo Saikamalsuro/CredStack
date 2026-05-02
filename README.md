@@ -1018,6 +1018,8 @@ For every page below: **the rendered output stays pixel-identical**. Only the da
   - `getCardById(id)` reads slug from DB.
   - Pass `card` and the new `CardExtended` (with reward rules etc.) as separate props if the detail UI needs to display rules/exclusions/milestones in their own sections — **but only if the existing JSX already has placeholder sections for these**. Check the existing JSX first; if no slot exists, do not add new ones. The README's later "Differentiating Features" section (§18) covers when to add these UI slots.
 
+  show similar card recommendation, when i click on any card.
+
 ### 11.4 `/compare` — `app/compare/page.tsx`
 
 - **Currently:** Client component, URL state via `?cards=id1,id2`, reads from static array.
