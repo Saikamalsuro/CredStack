@@ -29,9 +29,10 @@ import type { CreditCard } from "@/lib/data/cards"
 interface CardDetailsClientProps {
   card: CreditCard
   similarCards: CreditCard[]
+  dataLastVerifiedAt?: string | null
 }
 
-export function CardDetailsClient({ card, similarCards }: CardDetailsClientProps) {
+export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt }: CardDetailsClientProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero section */}
@@ -293,6 +294,21 @@ export function CardDetailsClient({ card, similarCards }: CardDetailsClientProps
                         {card.interestRate.min}% - {card.interestRate.max}%
                       </span>
                     </div>
+                    {dataLastVerifiedAt && (
+                      <>
+                        <Separator />
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground">Last verified</span>
+                          <span className="font-medium text-foreground">
+                            {new Date(dataLastVerifiedAt).toLocaleDateString("en-IN", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </span>
+                        </div>
+                      </>
+                    )}
                   </CardContent>
                 </Card>
 

@@ -1,0 +1,41 @@
+import type { MetadataRoute } from "next"
+import { getCards } from "@/lib/db/cards"
+
+const STATIC_PATHS = [
+  { path: "/", priority: 1.0, changeFrequency: "weekly" as const },
+  { path: "/cards", priority: 0.9, changeFrequency: "daily" as const },
+  { path: "/compare", priority: 0.8, changeFrequency: "weekly" as const },
+  { path: "/advisor", priority: 0.8, changeFrequency: "weekly" as const },
+  { path: "/analyzer", priority: 0.7, changeFrequency: "monthly" as const },
+  { path: "/optimizer", priority: 0.7, changeFrequency: "weekly" as const },
+  { path: "/eligibility", priority: 0.7, changeFrequency: "monthly" as const },
+  { path: "/offers", priority: 0.6, changeFrequency: "daily" as const },
+  { path: "/methodology", priority: 0.5, changeFrequency: "monthly" as const },
+]
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+  const now = new Date()
+
+  const staticEntries: MetadataRoute.Sitemap = STATIC_PATHS.map((s) => ({
+    url: `${base}${s.path}`,
+    lastModified: now,
+    changeFrequency: s.changeFrequency,
+    priority: s.priority,
+  }))
+
+  let cardEntries: MetadataRoute.Sitemap = []
+  try {
+    const cards = await getCards()
+    cardEntries = cards.map((c) => ({
+      url: `${base}/cards/${c.id}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    }))
+  } catch {
+    // If DB is unreachable at build time, sitemap still serves the static paths.
+  }
+
+  return [...staticEntries, ...cardEntries]
+}

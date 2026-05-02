@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
 import { getCardById, getCards } from "@/lib/db/cards"
+import { createPublicClient } from "@/lib/db/public-client"
 import { CardDetailsClient } from "./card-details-client"
 
 interface CardDetailsPageProps {
@@ -27,18 +28,36 @@ export async function generateMetadata({ params }: CardDetailsPageProps) {
   }
 }
 
+async function getVerificationDate(slug: string): Promise<string | null> {
+  const supabase = createPublicClient()
+  const { data } = await supabase
+    .from("cards")
+    .select("data_last_verified_at")
+    .eq("slug", slug)
+    .maybeSingle()
+  return data?.data_last_verified_at ?? null
+}
+
 export default async function CardDetailsPage({ params }: CardDetailsPageProps) {
   const { id } = await params
   const card = await getCardById(id)
 
-  if (!card) {
-    notFound()
-  }
+  if (!card) notFound()
 
-  const all = await getCards()
+  const [all, dataLastVerifiedAt] = await Promise.all([
+    getCards(),
+    getVerificationDate(id),
+  ])
+
   const similarCards = all
     .filter((c) => c.id !== card.id && c.category.some((cat) => card.category.includes(cat)))
     .slice(0, 3)
 
-  return <CardDetailsClient card={card} similarCards={similarCards} />
+  return (
+    <CardDetailsClient
+      card={card}
+      similarCards={similarCards}
+      dataLastVerifiedAt={dataLastVerifiedAt}
+    />
+  )
 }
