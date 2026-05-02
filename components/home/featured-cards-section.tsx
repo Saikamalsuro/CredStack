@@ -5,11 +5,13 @@ import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { CardGridItem } from "@/components/cards/card-grid-item"
-import { getPopularCards } from "@/lib/data/cards"
+import type { CreditCard } from "@/lib/data/cards"
 
-const popularCards = getPopularCards().slice(0, 6)
+interface FeaturedCardsSectionProps {
+  popularCards: CreditCard[]
+}
 
-export function FeaturedCardsSection() {
+export function FeaturedCardsSection({ popularCards }: FeaturedCardsSectionProps) {
   return (
     <section className="py-20 lg:py-28 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

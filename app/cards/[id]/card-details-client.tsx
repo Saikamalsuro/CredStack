@@ -24,18 +24,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { CreditCardVisual } from "@/components/cards/credit-card-visual"
 import { CardGridItem } from "@/components/cards/card-grid-item"
-import { creditCards, type CreditCard } from "@/lib/data/cards"
+import type { CreditCard } from "@/lib/data/cards"
 
 interface CardDetailsClientProps {
   card: CreditCard
+  similarCards: CreditCard[]
 }
 
-export function CardDetailsClient({ card }: CardDetailsClientProps) {
-  // Get similar cards for recommendations
-  const similarCards = creditCards
-    .filter(c => c.id !== card.id && c.category.some(cat => card.category.includes(cat)))
-    .slice(0, 3)
-
+export function CardDetailsClient({ card, similarCards }: CardDetailsClientProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero section */}
