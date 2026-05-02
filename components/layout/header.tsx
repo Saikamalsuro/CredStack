@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { CreditCard, Menu, X, Search, Moon, Sun, BarChart3, Sparkles, LayoutDashboard, GitCompare } from "lucide-react"
+import { CreditCard, Menu, X, Search, Moon, Sun, BarChart3, Sparkles, LayoutDashboard, GitCompare, LogOut, UserCircle } from "lucide-react"
 import { useState } from "react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
@@ -18,7 +18,7 @@ const navigation = [
   { name: "Analyzer", href: "/analyzer", icon: BarChart3 },
 ]
 
-export function Header() {
+export function Header({ displayName }: { displayName?: string | null }) {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { theme, setTheme } = useTheme()
@@ -113,9 +113,24 @@ export function Header() {
             <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           </Button>
-          <Button asChild className="bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-opacity">
-            <Link href="/auth/sign-in">Get Started</Link>
-          </Button>
+          {displayName ? (
+            <div className="flex items-center gap-2">
+              <span className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg bg-primary/5 border border-border">
+                <UserCircle className="h-4 w-4 text-primary" />
+                <span className="font-medium text-foreground max-w-[160px] truncate">{displayName}</span>
+              </span>
+              <form action="/auth/signout" method="post">
+                <Button type="submit" variant="outline" size="sm">
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign out
+                </Button>
+              </form>
+            </div>
+          ) : (
+            <Button asChild className="bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-opacity">
+              <Link href="/auth/sign-in">Get Started</Link>
+            </Button>
+          )}
         </motion.div>
       </nav>
 
@@ -157,9 +172,18 @@ export function Header() {
                 <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                 <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               </Button>
-              <Button asChild className="flex-1 bg-gradient-to-r from-primary to-accent hover:opacity-90">
-                <Link href="/auth/sign-in">Get Started</Link>
-              </Button>
+              {displayName ? (
+                <form action="/auth/signout" method="post" className="flex-1">
+                  <Button type="submit" variant="outline" className="w-full">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign out
+                  </Button>
+                </form>
+              ) : (
+                <Button asChild className="flex-1 bg-gradient-to-r from-primary to-accent hover:opacity-90">
+                  <Link href="/auth/sign-in">Get Started</Link>
+                </Button>
+              )}
             </div>
           </div>
         </motion.div>
