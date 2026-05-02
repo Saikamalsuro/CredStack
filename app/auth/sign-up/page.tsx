@@ -71,18 +71,43 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
             </div>
           </div>
 
-          <form action={signup} className="space-y-4">
+          <form action={signup} className="space-y-4" autoComplete="off">
             <div className="space-y-2">
               <Label htmlFor="full_name">Full name</Label>
-              <Input id="full_name" name="full_name" type="text" placeholder="Jane Doe" autoComplete="name" />
+              <Input
+                id="full_name"
+                name="full_name"
+                type="text"
+                placeholder="Jane Doe"
+                autoComplete="off"
+                defaultValue=""
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" placeholder="you@example.com" required autoComplete="email" />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                required
+                autoComplete="off"
+                autoCorrect="off"
+                spellCheck={false}
+                defaultValue=""
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" required minLength={6} autoComplete="new-password" />
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                required
+                minLength={6}
+                autoComplete="new-password"
+                defaultValue=""
+              />
               <p className="text-xs text-muted-foreground">At least 6 characters</p>
             </div>
             <Button type="submit" className="w-full">Create account</Button>

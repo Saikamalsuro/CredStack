@@ -47,15 +47,32 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             </div>
           </div>
 
-          <form action={login} className="space-y-4">
+          <form action={login} className="space-y-4" autoComplete="off">
             <input type="hidden" name="redirect" value={redirectTo ?? "/dashboard"} />
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" placeholder="you@example.com" required autoComplete="email" />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                required
+                autoComplete="off"
+                autoCorrect="off"
+                spellCheck={false}
+                defaultValue=""
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" required autoComplete="current-password" />
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                required
+                autoComplete="new-password"
+                defaultValue=""
+              />
             </div>
             <Button type="submit" className="w-full">Log in</Button>
           </form>
