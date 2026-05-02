@@ -31,7 +31,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           )}
 
           <form action={loginWithGoogle}>
-            <input type="hidden" name="redirect" value={redirectTo ?? "/dashboard"} />
+            <input type="hidden" name="redirect" value={redirectTo ?? "/"} />
             <Button variant="outline" className="w-full" type="submit">
               <GoogleIcon className="h-4 w-4 mr-2" />
               Continue with Google
@@ -48,7 +48,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </div>
 
           <form action={login} className="space-y-4" autoComplete="off">
-            <input type="hidden" name="redirect" value={redirectTo ?? "/dashboard"} />
+            <input type="hidden" name="redirect" value={redirectTo ?? "/"} />
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input

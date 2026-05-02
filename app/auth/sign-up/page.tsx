@@ -55,7 +55,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
           )}
 
           <form action={loginWithGoogle}>
-            <input type="hidden" name="redirect" value="/dashboard" />
+            <input type="hidden" name="redirect" value="/" />
             <Button variant="outline" className="w-full" type="submit">
               <GoogleIcon className="h-4 w-4 mr-2" />
               Continue with Google
