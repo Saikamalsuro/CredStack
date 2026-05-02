@@ -18,7 +18,7 @@ export default function AuthErrorPage() {
         </CardHeader>
         <CardContent className="space-y-3">
           <Button asChild className="w-full">
-            <Link href="/login">Back to login</Link>
+            <Link href="/auth/sign-in">Back to sign in</Link>
           </Button>
           <Button asChild variant="outline" className="w-full">
             <Link href="/">Home</Link>

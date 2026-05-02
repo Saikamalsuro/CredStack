@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { signup } from "./actions"
-import { loginWithGoogle } from "../login/actions"
+import { loginWithGoogle } from "../sign-in/actions"
 
 interface SignupPageProps {
   searchParams: Promise<{ error?: string; check_email?: string }>
@@ -29,7 +29,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
           </CardHeader>
           <CardContent>
             <Button asChild variant="outline" className="w-full">
-              <Link href="/login">Back to login</Link>
+              <Link href="/auth/sign-in">Back to sign in</Link>
             </Button>
           </CardContent>
         </Card>
@@ -90,7 +90,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
 
           <p className="text-sm text-center text-muted-foreground">
             Already have an account?{" "}
-            <Link href="/login" className="text-primary hover:underline font-medium">
+            <Link href="/auth/sign-in" className="text-primary hover:underline font-medium">
               Log in
             </Link>
           </p>

@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import type { Database } from './types'
 
 const PROTECTED_PREFIXES = ['/dashboard']
-const AUTH_ROUTES = ['/login', '/signup']
+const AUTH_ROUTES = ['/auth/sign-in', '/auth/sign-up']
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request })
@@ -35,7 +35,7 @@ export async function updateSession(request: NextRequest) {
 
   if (!user && PROTECTED_PREFIXES.some(p => pathname.startsWith(p))) {
     const url = request.nextUrl.clone()
-    url.pathname = '/login'
+    url.pathname = '/auth/sign-in'
     url.searchParams.set('redirect', pathname)
     return NextResponse.redirect(url)
   }

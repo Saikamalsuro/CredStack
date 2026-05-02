@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { Suspense } from "react"
 import { CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -63,7 +62,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
           <p className="text-sm text-center text-muted-foreground">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="text-primary hover:underline font-medium">
+            <Link href="/auth/sign-up" className="text-primary hover:underline font-medium">
               Sign up
             </Link>
           </p>

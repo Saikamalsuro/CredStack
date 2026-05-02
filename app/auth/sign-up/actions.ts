@@ -24,9 +24,9 @@ export async function signup(formData: FormData) {
   })
 
   if (error) {
-    redirect(`/signup?error=${encodeURIComponent(error.message)}`)
+    redirect(`/auth/sign-up?error=${encodeURIComponent(error.message)}`)
   }
 
   revalidatePath('/', 'layout')
-  redirect('/signup?check_email=1')
+  redirect('/auth/sign-up?check_email=1')
 }
