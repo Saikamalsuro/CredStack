@@ -60,25 +60,27 @@ export function AddCardForm({ card }: AddCardFormProps) {
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-b from-muted/50 to-background border-b border-border">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10">
           <Button variant="ghost" asChild className="mb-6 -ml-2">
             <Link href={`/cards/${card.id}`}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to card
             </Link>
           </Button>
-          <h1 className="font-display text-3xl font-bold text-foreground">Add to your portfolio</h1>
-          <p className="mt-2 text-lg text-muted-foreground">
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground">Add to your portfolio</h1>
+          <p className="mt-3 text-lg text-muted-foreground max-w-2xl">
             We use last four, statement and due dates only. Card numbers are never stored.
           </p>
         </div>
       </div>
 
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8 grid lg:grid-cols-2 gap-8">
-        <div>
-          <CreditCardVisual card={card} size="lg" />
-          <div className="mt-6 space-y-2 text-sm text-muted-foreground">
-            <p className="font-medium text-foreground">{card.name}</p>
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-10 items-start">
+        <div className="space-y-6 lg:sticky lg:top-24">
+          <div className="flex justify-center lg:justify-start">
+            <CreditCardVisual card={card} size="md" />
+          </div>
+          <div className="space-y-1 text-sm text-muted-foreground">
+            <p className="font-semibold text-base text-foreground">{card.name}</p>
             <p>{card.issuer} · {card.network.toUpperCase()}</p>
             <p>{card.rewards.description}</p>
           </div>
