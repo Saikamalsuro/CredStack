@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { CreditCard, Github, Twitter, Linkedin, Mail } from "lucide-react"
 import { motion } from "framer-motion"
 
@@ -40,6 +41,8 @@ const socialLinks = [
 ]
 
 export function Footer() {
+  const pathname = usePathname()
+  if (pathname.startsWith("/auth/")) return null
   return (
     <footer className="bg-muted/30 border-t border-border">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
