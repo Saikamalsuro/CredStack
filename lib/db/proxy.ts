@@ -2,8 +2,14 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import type { Database } from './types'
 
-const PROTECTED_PREFIXES = ['/dashboard', '/rewards']
+const PUBLIC_PREFIXES = ['/auth/', '/api/auth/', '/api/inngest']
+const PUBLIC_EXACT = ['/sitemap.xml', '/robots.txt']
 const AUTH_ROUTES = ['/auth/sign-in', '/auth/sign-up']
+
+function isPublic(pathname: string): boolean {
+  if (PUBLIC_EXACT.includes(pathname)) return true
+  return PUBLIC_PREFIXES.some((p) => pathname.startsWith(p))
+}
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request })
@@ -33,16 +39,18 @@ export async function updateSession(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
-  if (!user && PROTECTED_PREFIXES.some(p => pathname.startsWith(p))) {
+  // Unauthenticated: only auth flow + Inngest webhook + SEO files allowed
+  if (!user && !isPublic(pathname)) {
     const url = request.nextUrl.clone()
     url.pathname = '/auth/sign-in'
-    url.searchParams.set('redirect', pathname)
+    url.searchParams.set('redirect', pathname === '/auth/sign-in' ? '/' : pathname)
     return NextResponse.redirect(url)
   }
 
+  // Authenticated user landing on sign-in / sign-up: send to home
   if (user && AUTH_ROUTES.includes(pathname)) {
     const url = request.nextUrl.clone()
-    url.pathname = '/dashboard'
+    url.pathname = '/'
     url.search = ''
     return NextResponse.redirect(url)
   }
