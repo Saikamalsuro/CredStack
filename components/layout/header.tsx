@@ -3,33 +3,32 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { CreditCard, Menu, X, Moon, Sun, BarChart3, Sparkles, LayoutDashboard, GitCompare, LogOut, UserCircle } from "lucide-react"
-import { useState } from "react"
+import { CreditCard, Moon, Sun, LayoutDashboard, LogOut, UserCircle, Home as HomeIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { SearchCommand } from "@/components/layout/search-command"
+import { AppSidebar } from "@/components/layout/app-sidebar"
 import { cn } from "@/lib/utils"
 
 const navigation = [
-  { name: "Home", href: "/", icon: CreditCard },
+  { name: "Home", href: "/", icon: HomeIcon },
   { name: "Cards", href: "/cards", icon: CreditCard },
-  { name: "Compare", href: "/compare", icon: GitCompare },
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "AI Advisor", href: "/advisor", icon: Sparkles },
-  { name: "Analyzer", href: "/analyzer", icon: BarChart3 },
 ]
 
 export function Header({ displayName }: { displayName?: string | null }) {
   const pathname = usePathname()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { theme, setTheme } = useTheme()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8" aria-label="Global">
+      <nav className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-4 sm:px-6 lg:px-8" aria-label="Global">
+        {/* Sidebar toggle (full feature menu) */}
+        <AppSidebar />
+
         {/* Logo */}
         <motion.div
-          className="flex lg:flex-1"
+          className="flex"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
@@ -47,21 +46,9 @@ export function Header({ displayName }: { displayName?: string | null }) {
           </Link>
         </motion.div>
 
-        {/* Mobile menu button */}
-        <div className="flex lg:hidden">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
-        </div>
-
-        {/* Desktop navigation */}
+        {/* Primary navigation (desktop only) */}
         <motion.div
-          className="hidden lg:flex lg:gap-x-1"
+          className="hidden md:flex md:gap-x-1 md:ml-6"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
@@ -95,9 +82,11 @@ export function Header({ displayName }: { displayName?: string | null }) {
           })}
         </motion.div>
 
+        <div className="flex-1" />
+
         {/* Right side actions */}
         <motion.div
-          className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-2"
+          className="flex items-center gap-1 sm:gap-2"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
@@ -113,80 +102,25 @@ export function Header({ displayName }: { displayName?: string | null }) {
             <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           </Button>
           {displayName ? (
-            <div className="flex items-center gap-2">
-              <span className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg bg-primary/5 border border-border">
+            <>
+              <span className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg bg-primary/5 border border-border">
                 <UserCircle className="h-4 w-4 text-primary" />
-                <span className="font-medium text-foreground max-w-[160px] truncate">{displayName}</span>
+                <span className="font-medium text-foreground max-w-[140px] truncate">{displayName}</span>
               </span>
               <form action="/auth/signout" method="post">
                 <Button type="submit" variant="outline" size="sm">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign out
+                  <LogOut className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Sign out</span>
                 </Button>
               </form>
-            </div>
+            </>
           ) : (
-            <Button asChild className="bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-opacity">
+            <Button asChild size="sm" className="bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-opacity">
               <Link href="/auth/sign-in">Get Started</Link>
             </Button>
           )}
         </motion.div>
       </nav>
-
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <motion.div
-          className="lg:hidden"
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-        >
-          <div className="space-y-1 px-4 pb-4">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    "flex items-center gap-2 rounded-lg px-3 py-2 text-base font-medium transition-colors",
-                    isActive
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <item.icon className="h-5 w-5" />
-                  {item.name}
-                </Link>
-              )
-            })}
-            <div className="flex items-center gap-2 pt-4 border-t border-border mt-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                aria-label="Toggle theme"
-              >
-                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              </Button>
-              {displayName ? (
-                <form action="/auth/signout" method="post" className="flex-1">
-                  <Button type="submit" variant="outline" className="w-full">
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Sign out
-                  </Button>
-                </form>
-              ) : (
-                <Button asChild className="flex-1 bg-gradient-to-r from-primary to-accent hover:opacity-90">
-                  <Link href="/auth/sign-in">Get Started</Link>
-                </Button>
-              )}
-            </div>
-          </div>
-        </motion.div>
-      )}
     </header>
   )
 }
