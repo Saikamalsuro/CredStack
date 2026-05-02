@@ -40,77 +40,93 @@ import {
   Bar
 } from "recharts"
 
-interface DashboardClientProps {
-  userCards: CreditCardType[]
+export interface DashboardSpendingPoint {
+  month: string
+  spending: number
+  rewards: number
 }
 
-const spendingData = [
-  { month: "Jan", spending: 45000, rewards: 1350 },
-  { month: "Feb", spending: 52000, rewards: 1560 },
-  { month: "Mar", spending: 48000, rewards: 1440 },
-  { month: "Apr", spending: 61000, rewards: 1830 },
-  { month: "May", spending: 55000, rewards: 1650 },
-  { month: "Jun", spending: 67000, rewards: 2010 },
-]
+export interface DashboardCategoryShare {
+  name: string
+  value: number
+  color: string
+}
 
-const categorySpending = [
-  { name: "Shopping", value: 35, color: "#6366f1" },
-  { name: "Travel", value: 25, color: "#22c55e" },
-  { name: "Dining", value: 20, color: "#f59e0b" },
-  { name: "Fuel", value: 12, color: "#ef4444" },
-  { name: "Other", value: 8, color: "#8b5cf6" },
-]
+export interface DashboardTransaction {
+  id: string | number
+  merchant: string
+  category: string
+  amount: number
+  date: string
+  cardName: string
+}
 
-const recentTransactions = [
-  { id: 1, merchant: "Amazon", category: "Shopping", amount: 3499, date: "Today", cardName: "HDFC Infinia" },
-  { id: 2, merchant: "Swiggy", category: "Food", amount: 856, date: "Today", cardName: "Amazon Pay ICICI" },
-  { id: 3, merchant: "MakeMyTrip", category: "Travel", amount: 15600, date: "Yesterday", cardName: "Axis Magnus" },
-  { id: 4, merchant: "Indian Oil", category: "Fuel", amount: 2500, date: "Yesterday", cardName: "HDFC Infinia" },
-  { id: 5, merchant: "Netflix", category: "Entertainment", amount: 649, date: "2 days ago", cardName: "Amazon Pay ICICI" },
-]
+export interface DashboardUpcomingPayment {
+  cardName: string
+  dueDate: string
+  amount: number
+  minDue: number
+}
 
-const upcomingPayments = [
-  { cardName: "HDFC Infinia", dueDate: "15 Jul", amount: 45000, minDue: 2250 },
-  { cardName: "Axis Magnus", dueDate: "20 Jul", amount: 28000, minDue: 1400 },
-  { cardName: "Amazon Pay ICICI", dueDate: "25 Jul", amount: 12500, minDue: 625 },
-]
+export interface DashboardStatTotals {
+  totalSpending: number
+  totalRewards: number
+  activeCards: number
+  loungeVisits: number
+}
 
-const stats = [
-  { 
-    title: "Total Spending", 
-    value: "₹3,28,000", 
-    change: "+12.5%", 
-    trend: "up",
-    icon: IndianRupee,
-    color: "text-primary"
-  },
-  { 
-    title: "Total Rewards", 
-    value: "₹9,840", 
-    change: "+8.2%", 
-    trend: "up",
-    icon: Gift,
-    color: "text-success"
-  },
-  { 
-    title: "Active Cards", 
-    value: "3", 
-    change: "0", 
-    trend: "neutral",
-    icon: CreditCard,
-    color: "text-accent"
-  },
-  { 
-    title: "Lounge Visits", 
-    value: "12", 
-    change: "+3", 
-    trend: "up",
-    icon: Plane,
-    color: "text-primary"
-  },
-]
+interface DashboardClientProps {
+  userCards: CreditCardType[]
+  spendingData: DashboardSpendingPoint[]
+  categorySpending: DashboardCategoryShare[]
+  recentTransactions: DashboardTransaction[]
+  upcomingPayments: DashboardUpcomingPayment[]
+  totals: DashboardStatTotals
+}
 
-export function DashboardClient({ userCards }: DashboardClientProps) {
+export function DashboardClient({
+  userCards,
+  spendingData,
+  categorySpending,
+  recentTransactions,
+  upcomingPayments,
+  totals,
+}: DashboardClientProps) {
+  const stats = [
+    {
+      title: "Total Spending",
+      value: `₹${totals.totalSpending.toLocaleString()}`,
+      change: "",
+      trend: "neutral" as const,
+      icon: IndianRupee,
+      color: "text-primary",
+    },
+    {
+      title: "Total Rewards",
+      value: `₹${totals.totalRewards.toLocaleString()}`,
+      change: "",
+      trend: "neutral" as const,
+      icon: Gift,
+      color: "text-success",
+    },
+    {
+      title: "Active Cards",
+      value: String(totals.activeCards),
+      change: "",
+      trend: "neutral" as const,
+      icon: CreditCard,
+      color: "text-accent",
+    },
+    {
+      title: "Lounge Visits",
+      value: String(totals.loungeVisits),
+      change: "",
+      trend: "neutral" as const,
+      icon: Plane,
+      color: "text-primary",
+    },
+  ]
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}

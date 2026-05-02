@@ -59,41 +59,48 @@ export function AdvisorClient({ allCards }: AdvisorClientProps) {
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true)
-    
-    // Simulate AI analysis
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    // Mock recommendation logic based on profile
+
+    try {
+      const res = await fetch('/api/advisor/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        if (Array.isArray(data.recommendations) && data.recommendations.length > 0) {
+          setRecommendations(data.recommendations as CreditCard[])
+          setIsAnalyzing(false)
+          setStep(3)
+          return
+        }
+      }
+    } catch (err) {
+      console.warn('[advisor] API call failed, falling back to local sort', err)
+    }
+
+    // Fallback: local heuristic over allCards
     let recommended = [...allCards]
-    
-    if (profile.preferFreeCards) {
-      recommended = recommended.filter(c => c.annualFee === 0)
-    }
-    
-    if (profile.needsLoungeAccess) {
-      recommended = recommended.filter(c => c.loungeAccess !== null)
-    }
-    
-    // Sort by relevance based on spending categories
+    if (profile.preferFreeCards) recommended = recommended.filter((c) => c.annualFee === 0)
+    if (profile.needsLoungeAccess) recommended = recommended.filter((c) => c.loungeAccess !== null)
+
     recommended = recommended.sort((a, b) => {
       let scoreA = 0
       let scoreB = 0
-      
-      if (profile.shopping > 30 && a.category.includes("shopping")) scoreA += 2
-      if (profile.shopping > 30 && b.category.includes("shopping")) scoreB += 2
-      if (profile.travel > 25 && a.category.includes("travel")) scoreA += 2
-      if (profile.travel > 25 && b.category.includes("travel")) scoreB += 2
-      if (profile.fuel > 25 && a.category.includes("fuel")) scoreA += 2
-      if (profile.fuel > 25 && b.category.includes("fuel")) scoreB += 2
-      if (a.category.includes("cashback") && profile.monthlySpend > 30000) scoreA += 1
-      if (b.category.includes("cashback") && profile.monthlySpend > 30000) scoreB += 1
-      
+      if (profile.shopping > 30 && a.category.includes('shopping')) scoreA += 2
+      if (profile.shopping > 30 && b.category.includes('shopping')) scoreB += 2
+      if (profile.travel > 25 && a.category.includes('travel')) scoreA += 2
+      if (profile.travel > 25 && b.category.includes('travel')) scoreB += 2
+      if (profile.fuel > 25 && a.category.includes('fuel')) scoreA += 2
+      if (profile.fuel > 25 && b.category.includes('fuel')) scoreB += 2
+      if (a.category.includes('cashback') && profile.monthlySpend > 30000) scoreA += 1
+      if (b.category.includes('cashback') && profile.monthlySpend > 30000) scoreB += 1
       scoreA += a.rating * 2
       scoreB += b.rating * 2
-      
       return scoreB - scoreA
     })
-    
+
     setRecommendations(recommended.slice(0, 4))
     setIsAnalyzing(false)
     setStep(3)

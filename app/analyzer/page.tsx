@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { motion } from "framer-motion"
 import {
   BarChart3,
@@ -10,7 +10,7 @@ import {
   TrendingUp,
   Shield,
   Percent,
-  ArrowRight
+  ArrowRight,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -19,69 +19,137 @@ import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
 
-// Mock analysis results
-const mockAnalysis = {
-  overallScore: 78,
-  spendingEfficiency: 82,
-  rewardsOptimization: 65,
-  riskScore: 15,
-  monthlySpend: 85000,
-  monthlyRewards: 2125,
-  potentialSavings: 850,
-  insights: [
-    {
-      type: "optimization",
-      title: "Switch shopping spend to your Amazon card",
-      description: "You could earn 3% more cashback by using your Amazon Pay card for online shopping instead of HDFC Millennia.",
-      impact: "+₹450/month",
-      priority: "high"
-    },
-    {
-      type: "optimization",
-      title: "Maximize travel rewards",
-      description: "Your Axis Magnus earns 12x points on travel. Book flights directly through airline websites to maximize rewards.",
-      impact: "+₹200/month",
-      priority: "medium"
-    },
-    {
-      type: "warning",
-      title: "Underutilized lounge benefits",
-      description: "You have 16 unused lounge visits this quarter. Consider using them before they expire.",
-      impact: "₹8,000 value",
-      priority: "medium"
-    },
-    {
-      type: "optimization",
-      title: "Fuel surcharge savings",
-      description: "Use your HDFC card for fuel purchases to save on surcharge fees.",
-      impact: "+₹150/month",
-      priority: "low"
-    }
-  ],
-  categoryBreakdown: [
-    { category: "Shopping", spend: 32000, rewards: 960, card: "Amazon Pay ICICI", efficiency: 92 },
-    { category: "Travel", spend: 18000, rewards: 540, card: "Axis Magnus", efficiency: 85 },
-    { category: "Dining", spend: 15000, rewards: 300, card: "HDFC Millennia", efficiency: 70 },
-    { category: "Fuel", spend: 8000, rewards: 160, card: "HDFC Millennia", efficiency: 75 },
-    { category: "Bills", spend: 12000, rewards: 120, card: "Various", efficiency: 45 },
-  ],
-  riskFactors: [
-    { factor: "Credit Utilization", status: "good", value: "23%", description: "Below 30% is ideal" },
-    { factor: "Payment History", status: "excellent", value: "100%", description: "Always paid on time" },
-    { factor: "Number of Cards", status: "good", value: "4 cards", description: "Manageable number" },
-    { factor: "Total Credit Limit", status: "good", value: "₹12L", description: "Healthy limit" },
-  ]
+interface InsightItem {
+  type: "optimization" | "warning"
+  title: string
+  description: string
+  impact: string
+  priority: "high" | "medium" | "low"
 }
 
-export default function AnalyzerPage() {
-  const [isAnalyzed, setIsAnalyzed] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+interface CategoryBreakdownItem {
+  category: string
+  spend: number
+  rewards: number
+  card: string
+  efficiency: number
+}
 
-  const handleAnalyze = async () => {
+interface RiskFactor {
+  factor: string
+  status: string
+  value: string
+  description: string
+}
+
+interface AnalysisShape {
+  overallScore: number
+  spendingEfficiency: number
+  rewardsOptimization: number
+  riskScore: number
+  monthlySpend: number
+  monthlyRewards: number
+  potentialSavings: number
+  insights: InsightItem[]
+  categoryBreakdown: CategoryBreakdownItem[]
+  riskFactors: RiskFactor[]
+}
+
+const POLL_INTERVAL = 4000
+const MAX_POLLS = 45 // ~3 minutes
+
+export default function AnalyzerPage() {
+  const [analysis, setAnalysis] = useState<AnalysisShape | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [statusLabel, setStatusLabel] = useState<string>("")
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleDemo = async () => {
     setIsLoading(true)
-    await new Promise(resolve => setTimeout(resolve, 2500))
+    setError(null)
+    setStatusLabel("Loading demo data...")
+    try {
+      const res = await fetch("/api/analyzer/demo")
+      if (!res.ok) throw new Error("Demo unavailable")
+      const data = (await res.json()) as AnalysisShape
+      setAnalysis(data)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Demo failed")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleUpload = async (file: File) => {
+    setIsLoading(true)
+    setError(null)
+    setStatusLabel("Uploading statement...")
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+      const res = await fetch("/api/analyzer/upload", { method: "POST", body: formData })
+      if (res.status === 401) {
+        setError("Sign in to upload your statement, or use Demo Data instead.")
+        setIsLoading(false)
+        return
+      }
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body.error ?? "Upload failed")
+      }
+      const { runId } = (await res.json()) as { runId: string }
+      setStatusLabel("Parsing PDF...")
+      await pollStatus(runId)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Upload failed")
+      setIsLoading(false)
+    }
+  }
+
+  const pollStatus = async (runId: string) => {
+    for (let i = 0; i < MAX_POLLS; i++) {
+      const res = await fetch(`/api/analyzer/status?runId=${runId}`)
+      if (!res.ok) {
+        setError("Status check failed")
+        setIsLoading(false)
+        return
+      }
+      const body = await res.json()
+      if (body.status === "ready") {
+        setAnalysis(body as AnalysisShape)
+        setIsLoading(false)
+        return
+      }
+      if (body.status === "failed") {
+        setError("Statement parsing failed")
+        setIsLoading(false)
+        return
+      }
+      const labels: Record<string, string> = {
+        queued: "Queued for processing...",
+        parsing: "Extracting text from PDF...",
+        classifying: "Classifying transactions...",
+      }
+      setStatusLabel(labels[body.status] ?? "Working...")
+      await new Promise((r) => setTimeout(r, POLL_INTERVAL))
+    }
+    setError("Timed out waiting for results")
     setIsLoading(false)
-    setIsAnalyzed(true)
+  }
+
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) handleUpload(file)
+  }
+
+  const triggerFile = () => fileInputRef.current?.click()
+
+  const reset = () => {
+    setAnalysis(null)
+    setError(null)
+    setIsLoading(false)
+    if (fileInputRef.current) fileInputRef.current.value = ""
   }
 
   return (
@@ -102,7 +170,7 @@ export default function AnalyzerPage() {
               Analyze Your Spending
             </h1>
             <p className="mt-3 text-lg text-muted-foreground max-w-2xl">
-              Get detailed insights into your credit card usage, optimize rewards, 
+              Get detailed insights into your credit card usage, optimize rewards,
               and discover ways to maximize your benefits.
             </p>
           </motion.div>
@@ -110,8 +178,7 @@ export default function AnalyzerPage() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        {!isAnalyzed ? (
-          // Upload section
+        {!analysis ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -125,15 +192,40 @@ export default function AnalyzerPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="border-2 border-dashed border-border rounded-xl p-12 text-center hover:border-primary/50 transition-colors cursor-pointer">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="application/pdf"
+                  className="hidden"
+                  onChange={onFileChange}
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  onClick={triggerFile}
+                  disabled={isLoading}
+                  className="w-full border-2 border-dashed border-border rounded-xl p-12 text-center hover:border-primary/50 transition-colors cursor-pointer disabled:cursor-not-allowed"
+                >
                   <Upload className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                   <p className="font-medium text-foreground">
                     Drop your statement here
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    or click to browse (PDF, CSV supported)
+                    or click to browse (PDF up to 10 MB)
                   </p>
-                </div>
+                </button>
+
+                {error && (
+                  <div className="text-sm bg-destructive/10 text-destructive rounded-md p-3 border border-destructive/20">
+                    {error}
+                  </div>
+                )}
+
+                {isLoading && statusLabel && (
+                  <div className="text-sm bg-muted/50 text-muted-foreground rounded-md p-3 border border-border text-center">
+                    {statusLabel}
+                  </div>
+                )}
 
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
@@ -144,9 +236,9 @@ export default function AnalyzerPage() {
                   </div>
                 </div>
 
-                <Button 
-                  onClick={handleAnalyze} 
-                  className="w-full" 
+                <Button
+                  onClick={handleDemo}
+                  className="w-full"
                   size="lg"
                   disabled={isLoading}
                 >
@@ -169,13 +261,11 @@ export default function AnalyzerPage() {
             </Card>
           </motion.div>
         ) : (
-          // Analysis results
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="space-y-8"
           >
-            {/* Score cards */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Card>
                 <CardContent className="pt-6">
@@ -197,12 +287,12 @@ export default function AnalyzerPage() {
                           stroke="var(--primary)"
                           strokeWidth="8"
                           fill="none"
-                          strokeDasharray={`${mockAnalysis.overallScore * 2.51} 251`}
+                          strokeDasharray={`${analysis.overallScore * 2.51} 251`}
                           strokeLinecap="round"
                         />
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-2xl font-bold text-foreground">{mockAnalysis.overallScore}</span>
+                        <span className="text-2xl font-bold text-foreground">{analysis.overallScore}</span>
                       </div>
                     </div>
                     <p className="font-medium text-foreground">Overall Score</p>
@@ -218,13 +308,13 @@ export default function AnalyzerPage() {
                       <TrendingUp className="h-5 w-5 text-success" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-foreground">₹{mockAnalysis.monthlyRewards.toLocaleString()}</p>
+                      <p className="text-2xl font-bold text-foreground">₹{analysis.monthlyRewards.toLocaleString()}</p>
                       <p className="text-sm text-muted-foreground">Monthly Rewards</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <Badge variant="secondary" className="bg-success/10 text-success">
-                      +₹{mockAnalysis.potentialSavings}
+                      +₹{analysis.potentialSavings}
                     </Badge>
                     <span className="text-muted-foreground">potential savings</span>
                   </div>
@@ -238,11 +328,11 @@ export default function AnalyzerPage() {
                       <Percent className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-foreground">{mockAnalysis.rewardsOptimization}%</p>
+                      <p className="text-2xl font-bold text-foreground">{analysis.rewardsOptimization}%</p>
                       <p className="text-sm text-muted-foreground">Rewards Efficiency</p>
                     </div>
                   </div>
-                  <Progress value={mockAnalysis.rewardsOptimization} className="h-2" />
+                  <Progress value={analysis.rewardsOptimization} className="h-2" />
                 </CardContent>
               </Card>
 
@@ -257,7 +347,7 @@ export default function AnalyzerPage() {
                       <p className="text-sm text-muted-foreground">Risk Score</p>
                     </div>
                   </div>
-                  <Progress value={100 - mockAnalysis.riskScore} className="h-2" />
+                  <Progress value={100 - analysis.riskScore} className="h-2" />
                 </CardContent>
               </Card>
             </div>
@@ -270,7 +360,7 @@ export default function AnalyzerPage() {
               </TabsList>
 
               <TabsContent value="insights" className="space-y-4">
-                {mockAnalysis.insights.map((insight, index) => (
+                {analysis.insights.map((insight, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 10 }}
@@ -281,8 +371,8 @@ export default function AnalyzerPage() {
                       <CardContent className="p-6">
                         <div className="flex items-start gap-4">
                           <div className={`p-2 rounded-lg shrink-0 ${
-                            insight.type === "warning" 
-                              ? "bg-warning/10" 
+                            insight.type === "warning"
+                              ? "bg-warning/10"
                               : "bg-success/10"
                           }`}>
                             {insight.type === "warning" ? (
@@ -295,7 +385,7 @@ export default function AnalyzerPage() {
                             <div className="flex items-center gap-2 mb-1">
                               <h3 className="font-semibold text-foreground">{insight.title}</h3>
                               <Badge variant={
-                                insight.priority === "high" ? "default" : 
+                                insight.priority === "high" ? "default" :
                                 insight.priority === "medium" ? "secondary" : "outline"
                               }>
                                 {insight.priority} priority
@@ -321,7 +411,7 @@ export default function AnalyzerPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-6">
-                      {mockAnalysis.categoryBreakdown.map((cat, index) => (
+                      {analysis.categoryBreakdown.map((cat, index) => (
                         <div key={index} className="space-y-2">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -352,7 +442,7 @@ export default function AnalyzerPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="grid sm:grid-cols-2 gap-6">
-                      {mockAnalysis.riskFactors.map((factor, index) => (
+                      {analysis.riskFactors.map((factor, index) => (
                         <div key={index} className="p-4 bg-muted/30 rounded-lg">
                           <div className="flex items-center justify-between mb-2">
                             <span className="font-medium text-foreground">{factor.factor}</span>
@@ -373,9 +463,8 @@ export default function AnalyzerPage() {
               </TabsContent>
             </Tabs>
 
-            {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="outline" onClick={() => setIsAnalyzed(false)}>
+              <Button variant="outline" onClick={reset}>
                 Analyze Another Statement
               </Button>
               <Button asChild>
