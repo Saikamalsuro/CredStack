@@ -67,10 +67,10 @@ function applySimilarFilter(cards: CreditCard[], filter: SimilarFilter): CreditC
 export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt }: CardDetailsClientProps) {
   const [similarFilter, setSimilarFilter] = useState<SimilarFilter>("all")
 
-  const filteredSimilar = useMemo(() => {
-    const filtered = applySimilarFilter(similarCards, similarFilter)
-    return filtered.slice(0, 3)
-  }, [similarCards, similarFilter])
+  const filteredSimilar = useMemo(
+    () => applySimilarFilter(similarCards, similarFilter),
+    [similarCards, similarFilter]
+  )
 
   const filterCounts = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -500,11 +500,11 @@ export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt }: Ca
                   Similar Cards You Might Like
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Ranked by content similarity. Filter to surface other matches.
+                  Ranked by content similarity. Scroll horizontally to see more, or filter to narrow the list.
                 </p>
               </div>
               <p className="text-xs text-muted-foreground">
-                Showing {filteredSimilar.length} of {filterCounts[similarFilter] ?? 0}
+                {filteredSimilar.length} card{filteredSimilar.length === 1 ? "" : "s"}
               </p>
             </div>
             <div className="flex flex-wrap gap-2 mb-6">
@@ -532,10 +532,17 @@ export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt }: Ca
               })}
             </div>
             {filteredSimilar.length > 0 ? (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredSimilar.map((similarCard, index) => (
-                  <CardGridItem key={similarCard.id} card={similarCard} index={index} />
-                ))}
+              <div className="-mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 overflow-x-auto pb-4 snap-x snap-mandatory">
+                <div className="flex gap-6">
+                  {filteredSimilar.map((similarCard, index) => (
+                    <div
+                      key={similarCard.id}
+                      className="shrink-0 w-[280px] sm:w-[320px] snap-start"
+                    >
+                      <CardGridItem card={similarCard} index={index} />
+                    </div>
+                  ))}
+                </div>
               </div>
             ) : (
               <div className="text-center py-10 bg-muted/30 rounded-2xl border border-dashed border-border">
