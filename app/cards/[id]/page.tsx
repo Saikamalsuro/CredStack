@@ -46,7 +46,7 @@ export default async function CardDetailsPage({ params }: CardDetailsPageProps) 
   if (!card) notFound()
 
   const [similarCards, dataLastVerifiedAt] = await Promise.all([
-    getSimilarCards(id, 3),
+    getSimilarCards(id, 12),
     getVerificationDate(id),
   ])
 

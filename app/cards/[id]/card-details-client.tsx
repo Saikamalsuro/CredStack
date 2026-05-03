@@ -1,5 +1,6 @@
 "use client"
 
+import { useMemo, useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { 
@@ -32,7 +33,53 @@ interface CardDetailsClientProps {
   dataLastVerifiedAt?: string | null
 }
 
+type SimilarFilter =
+  | "all"
+  | "cat:premium"
+  | "cat:travel"
+  | "cat:cashback"
+  | "cat:rewards"
+  | "cat:shopping"
+  | "cat:fuel"
+  | "free"
+  | "lounge"
+
+const SIMILAR_FILTERS: { id: SimilarFilter; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "cat:premium", label: "Premium" },
+  { id: "cat:travel", label: "Travel" },
+  { id: "cat:cashback", label: "Cashback" },
+  { id: "cat:rewards", label: "Rewards" },
+  { id: "cat:shopping", label: "Shopping" },
+  { id: "cat:fuel", label: "Fuel" },
+  { id: "free", label: "Lifetime free" },
+  { id: "lounge", label: "With lounge" },
+]
+
+function applySimilarFilter(cards: CreditCard[], filter: SimilarFilter): CreditCard[] {
+  if (filter === "all") return cards
+  if (filter === "free") return cards.filter((c) => c.annualFee === 0)
+  if (filter === "lounge") return cards.filter((c) => c.loungeAccess !== null)
+  const cat = filter.replace("cat:", "")
+  return cards.filter((c) => c.category.includes(cat as CreditCard["category"][number]))
+}
+
 export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt }: CardDetailsClientProps) {
+  const [similarFilter, setSimilarFilter] = useState<SimilarFilter>("all")
+
+  const filteredSimilar = useMemo(() => {
+    const filtered = applySimilarFilter(similarCards, similarFilter)
+    return filtered.slice(0, 3)
+  }, [similarCards, similarFilter])
+
+  const filterCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const f of SIMILAR_FILTERS) {
+      counts[f.id] = applySimilarFilter(similarCards, f.id).length
+    }
+    return counts
+  }, [similarCards])
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero section */}
@@ -447,14 +494,54 @@ export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt }: Ca
         {/* Similar cards */}
         {similarCards.length > 0 && (
           <div className="mt-16">
-            <h2 className="font-display text-2xl font-bold text-foreground mb-8">
-              Similar Cards You Might Like
-            </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {similarCards.map((similarCard, index) => (
-                <CardGridItem key={similarCard.id} card={similarCard} index={index} />
-              ))}
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+              <div>
+                <h2 className="font-display text-2xl font-bold text-foreground">
+                  Similar Cards You Might Like
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Ranked by content similarity. Filter to surface other matches.
+                </p>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Showing {filteredSimilar.length} of {filterCounts[similarFilter] ?? 0}
+              </p>
             </div>
+            <div className="flex flex-wrap gap-2 mb-6">
+              {SIMILAR_FILTERS.map((f) => {
+                const count = filterCounts[f.id] ?? 0
+                const disabled = count === 0
+                const active = similarFilter === f.id
+                return (
+                  <button
+                    key={f.id}
+                    onClick={() => !disabled && setSimilarFilter(f.id)}
+                    disabled={disabled}
+                    className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
+                      active
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : disabled
+                        ? "bg-muted/30 text-muted-foreground/50 border-border cursor-not-allowed"
+                        : "bg-background text-foreground border-border hover:border-primary hover:text-primary"
+                    }`}
+                  >
+                    {f.label}
+                    <span className="ml-1.5 opacity-70">{count}</span>
+                  </button>
+                )
+              })}
+            </div>
+            {filteredSimilar.length > 0 ? (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredSimilar.map((similarCard, index) => (
+                  <CardGridItem key={similarCard.id} card={similarCard} index={index} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-10 bg-muted/30 rounded-2xl border border-dashed border-border">
+                <p className="text-sm text-muted-foreground">No similar cards match this filter.</p>
+              </div>
+            )}
           </div>
         )}
       </div>
