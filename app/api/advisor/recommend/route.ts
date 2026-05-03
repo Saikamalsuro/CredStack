@@ -24,6 +24,8 @@ const RequestSchema = z.object({
   monthlySpend: z.number().min(0),
   preferFreeCards: z.boolean(),
   needsLoungeAccess: z.boolean(),
+  prioritizeForex: z.boolean().optional().default(false),
+  prioritizeWelcomeBonus: z.boolean().optional().default(false),
 })
 
 function stripExtended(card: CardExtended): CreditCard {
@@ -68,10 +70,24 @@ export async function POST(request: Request) {
 
     if (candidates.length === 0) candidates = allExtended
 
-    const scored = candidates.map((card) => ({
-      card,
-      breakdown: computeNetAnnualValue(card, profile),
-    }))
+    const scored = candidates.map((card) => {
+      const breakdown = computeNetAnnualValue(card, profile)
+      let bonus = 0
+      if (profile.prioritizeForex) {
+        // Lower forex => bigger bonus. Cap at +5K to stay in net-value scale.
+        bonus += Math.max(0, (5 - card.foreignTransactionFee) * 1000)
+      }
+      if (profile.prioritizeWelcomeBonus) {
+        bonus += card.milestones.reduce((s, m) => s + m.rewardValue, 0)
+      }
+      return {
+        card,
+        breakdown: {
+          ...breakdown,
+          netAnnualValue: breakdown.netAnnualValue + bonus,
+        },
+      }
+    })
 
     scored.sort((a, b) => b.breakdown.netAnnualValue - a.breakdown.netAnnualValue)
 

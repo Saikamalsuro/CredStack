@@ -1,17 +1,19 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { 
-  Sparkles, 
-  Send, 
-  Loader2, 
-  ShoppingBag, 
-  Plane, 
-  Fuel, 
+import {
+  Sparkles,
+  Loader2,
+  ShoppingBag,
+  Plane,
+  Fuel,
   Utensils,
+  Globe,
+  Gift,
   Check,
-  ArrowRight
+  ArrowRight,
+  Wallet,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -26,12 +28,14 @@ interface AdvisorClientProps {
   allCards: CreditCard[]
 }
 
-const spendingCategories = [
-  { id: "shopping", label: "Online Shopping", icon: ShoppingBag, color: "bg-blue-100 text-blue-600" },
-  { id: "travel", label: "Travel & Hotels", icon: Plane, color: "bg-green-100 text-green-600" },
-  { id: "fuel", label: "Fuel", icon: Fuel, color: "bg-orange-100 text-orange-600" },
-  { id: "dining", label: "Dining & Food", icon: Utensils, color: "bg-pink-100 text-pink-600" },
-]
+const SPENDING_CATEGORIES = [
+  { id: "shopping", label: "Online Shopping", hint: "Amazon, Flipkart, Myntra", icon: ShoppingBag, color: "bg-blue-100 text-blue-600" },
+  { id: "travel", label: "Travel & Hotels", hint: "Flights, hotels, vacation", icon: Plane, color: "bg-green-100 text-green-600" },
+  { id: "fuel", label: "Fuel", hint: "Petrol, diesel pumps", icon: Fuel, color: "bg-orange-100 text-orange-600" },
+  { id: "dining", label: "Dining & Food", hint: "Restaurants, Swiggy, Zomato", icon: Utensils, color: "bg-pink-100 text-pink-600" },
+] as const
+
+type CategoryId = (typeof SPENDING_CATEGORIES)[number]["id"]
 
 interface SpendingProfile {
   shopping: number
@@ -41,30 +45,77 @@ interface SpendingProfile {
   monthlySpend: number
   preferFreeCards: boolean
   needsLoungeAccess: boolean
+  prioritizeForex: boolean
+  prioritizeWelcomeBonus: boolean
 }
+
+const DEFAULT_PROFILE: SpendingProfile = {
+  shopping: 30,
+  travel: 20,
+  fuel: 25,
+  dining: 25,
+  monthlySpend: 50000,
+  preferFreeCards: false,
+  needsLoungeAccess: false,
+  prioritizeForex: false,
+  prioritizeWelcomeBonus: false,
+}
+
+const formatRupees = (n: number) => `₹${Math.round(n).toLocaleString("en-IN")}`
 
 export function AdvisorClient({ allCards }: AdvisorClientProps) {
   const [step, setStep] = useState(1)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [recommendations, setRecommendations] = useState<CreditCard[]>([])
-  const [profile, setProfile] = useState<SpendingProfile>({
-    shopping: 30,
-    travel: 20,
-    fuel: 25,
-    dining: 25,
-    monthlySpend: 50000,
-    preferFreeCards: false,
-    needsLoungeAccess: false,
+  const [profile, setProfile] = useState<SpendingProfile>(DEFAULT_PROFILE)
+
+  // Working state for step 1: rupee amount per category. Source of truth in step 1.
+  // The submitted profile uses normalized %.
+  const [rupees, setRupees] = useState<Record<CategoryId, number>>({
+    shopping: Math.round(DEFAULT_PROFILE.monthlySpend * (DEFAULT_PROFILE.shopping / 100)),
+    travel: Math.round(DEFAULT_PROFILE.monthlySpend * (DEFAULT_PROFILE.travel / 100)),
+    fuel: Math.round(DEFAULT_PROFILE.monthlySpend * (DEFAULT_PROFILE.fuel / 100)),
+    dining: Math.round(DEFAULT_PROFILE.monthlySpend * (DEFAULT_PROFILE.dining / 100)),
   })
+
+  const totalAllocated = rupees.shopping + rupees.travel + rupees.fuel + rupees.dining
+  const otherAmount = Math.max(0, profile.monthlySpend - totalAllocated)
+  const overAllocated = totalAllocated > profile.monthlySpend
+
+  const pct = useMemo(() => {
+    const total = profile.monthlySpend || 1
+    return {
+      shopping: Math.round((rupees.shopping / total) * 100),
+      travel: Math.round((rupees.travel / total) * 100),
+      fuel: Math.round((rupees.fuel / total) * 100),
+      dining: Math.round((rupees.dining / total) * 100),
+    }
+  }, [rupees, profile.monthlySpend])
+
+  const setMonthlySpend = (val: number) => {
+    setProfile((p) => ({ ...p, monthlySpend: val }))
+  }
+
+  const setCategoryRupees = (id: CategoryId, val: number) => {
+    setRupees((r) => ({ ...r, [id]: val }))
+  }
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true)
+    const submitted: SpendingProfile = {
+      ...profile,
+      shopping: pct.shopping,
+      travel: pct.travel,
+      fuel: pct.fuel,
+      dining: pct.dining,
+    }
+    setProfile(submitted)
 
     try {
-      const res = await fetch('/api/advisor/recommend', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(profile),
+      const res = await fetch("/api/advisor/recommend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(submitted),
       })
 
       if (res.ok) {
@@ -77,25 +128,26 @@ export function AdvisorClient({ allCards }: AdvisorClientProps) {
         }
       }
     } catch (err) {
-      console.warn('[advisor] API call failed, falling back to local sort', err)
+      console.warn("[advisor] API call failed, falling back to local sort", err)
     }
 
-    // Fallback: local heuristic over allCards
     let recommended = [...allCards]
-    if (profile.preferFreeCards) recommended = recommended.filter((c) => c.annualFee === 0)
-    if (profile.needsLoungeAccess) recommended = recommended.filter((c) => c.loungeAccess !== null)
-
+    if (submitted.preferFreeCards) recommended = recommended.filter((c) => c.annualFee === 0)
+    if (submitted.needsLoungeAccess) recommended = recommended.filter((c) => c.loungeAccess !== null)
+    if (submitted.prioritizeForex) {
+      recommended = recommended.sort((a, b) => a.foreignTransactionFee - b.foreignTransactionFee)
+    }
     recommended = recommended.sort((a, b) => {
       let scoreA = 0
       let scoreB = 0
-      if (profile.shopping > 30 && a.category.includes('shopping')) scoreA += 2
-      if (profile.shopping > 30 && b.category.includes('shopping')) scoreB += 2
-      if (profile.travel > 25 && a.category.includes('travel')) scoreA += 2
-      if (profile.travel > 25 && b.category.includes('travel')) scoreB += 2
-      if (profile.fuel > 25 && a.category.includes('fuel')) scoreA += 2
-      if (profile.fuel > 25 && b.category.includes('fuel')) scoreB += 2
-      if (a.category.includes('cashback') && profile.monthlySpend > 30000) scoreA += 1
-      if (b.category.includes('cashback') && profile.monthlySpend > 30000) scoreB += 1
+      if (submitted.shopping > 30 && a.category.includes("shopping")) scoreA += 2
+      if (submitted.shopping > 30 && b.category.includes("shopping")) scoreB += 2
+      if (submitted.travel > 25 && a.category.includes("travel")) scoreA += 2
+      if (submitted.travel > 25 && b.category.includes("travel")) scoreB += 2
+      if (submitted.fuel > 25 && a.category.includes("fuel")) scoreA += 2
+      if (submitted.fuel > 25 && b.category.includes("fuel")) scoreB += 2
+      if (a.category.includes("cashback") && submitted.monthlySpend > 30000) scoreA += 1
+      if (b.category.includes("cashback") && submitted.monthlySpend > 30000) scoreB += 1
       scoreA += a.rating * 2
       scoreB += b.rating * 2
       return scoreB - scoreA
@@ -106,9 +158,12 @@ export function AdvisorClient({ allCards }: AdvisorClientProps) {
     setStep(3)
   }
 
+  const togglePreference = (key: keyof SpendingProfile) => {
+    setProfile((p) => ({ ...p, [key]: !p[key as keyof SpendingProfile] }))
+  }
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <div className="bg-gradient-to-b from-primary/5 via-muted/30 to-background border-b border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <motion.div
@@ -125,7 +180,7 @@ export function AdvisorClient({ allCards }: AdvisorClientProps) {
               Credit Card Advisor
             </h1>
             <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
-              Tell us about your spending habits and preferences, and our AI will recommend 
+              Tell us about your spending habits and preferences, and our AI will recommend
               the best credit cards tailored just for you.
             </p>
           </motion.div>
@@ -133,7 +188,6 @@ export function AdvisorClient({ allCards }: AdvisorClientProps) {
       </div>
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
-        {/* Progress steps */}
         <div className="flex items-center justify-center gap-4 mb-12">
           {[1, 2, 3].map((s) => (
             <div key={s} className="flex items-center">
@@ -152,7 +206,6 @@ export function AdvisorClient({ allCards }: AdvisorClientProps) {
         </div>
 
         <AnimatePresence mode="wait">
-          {/* Step 1: Spending breakdown */}
           {step === 1 && (
             <motion.div
               key="step1"
@@ -163,37 +216,87 @@ export function AdvisorClient({ allCards }: AdvisorClientProps) {
             >
               <Card>
                 <CardHeader>
-                  <CardTitle>Your Spending Breakdown</CardTitle>
+                  <CardTitle>Your Monthly Spending</CardTitle>
                   <CardDescription>
-                    Adjust the sliders to show how your spending is distributed
+                    Enter how much you spend per month, then split it across categories. We do the percentages for you.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-8">
-                  {spendingCategories.map((category) => (
-                    <div key={category.id} className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-lg ${category.color}`}>
-                            <category.icon className="h-5 w-5" />
-                          </div>
-                          <span className="font-medium text-foreground">{category.label}</span>
-                        </div>
-                        <span className="font-semibold text-foreground">
-                          {profile[category.id as keyof SpendingProfile]}%
-                        </span>
-                      </div>
-                      <Slider
-                        value={[profile[category.id as keyof SpendingProfile] as number]}
-                        onValueChange={([value]) => setProfile({ ...profile, [category.id]: value })}
-                        max={100}
-                        step={5}
-                        className="w-full"
-                      />
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="font-medium text-foreground flex items-center gap-2">
+                        <Wallet className="h-4 w-4 text-primary" />
+                        Monthly card spend
+                      </label>
+                      <span className="text-sm text-muted-foreground">{formatRupees(profile.monthlySpend)}</span>
                     </div>
-                  ))}
+                    <Input
+                      type="number"
+                      min={1000}
+                      step={1000}
+                      value={profile.monthlySpend}
+                      onChange={(e) => setMonthlySpend(Math.max(0, parseInt(e.target.value) || 0))}
+                      className="text-base"
+                    />
+                  </div>
+
+                  <div className="space-y-6 pt-4 border-t border-border">
+                    {SPENDING_CATEGORIES.map((category) => {
+                      const value = rupees[category.id]
+                      const percent = pct[category.id]
+                      return (
+                        <div key={category.id} className="space-y-3">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className={`p-2 rounded-lg shrink-0 ${category.color}`}>
+                                <category.icon className="h-5 w-5" />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="font-medium text-foreground">{category.label}</p>
+                                <p className="text-xs text-muted-foreground">{category.hint}</p>
+                              </div>
+                            </div>
+                            <div className="text-right shrink-0">
+                              <p className="font-semibold text-foreground">{formatRupees(value)}</p>
+                              <p className="text-xs text-muted-foreground">{percent}% of spend</p>
+                            </div>
+                          </div>
+                          <Slider
+                            value={[value]}
+                            onValueChange={([v]) => setCategoryRupees(category.id, v)}
+                            max={Math.max(profile.monthlySpend, value)}
+                            step={500}
+                            className="w-full"
+                          />
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  <div className={`p-4 rounded-lg border text-sm ${
+                    overAllocated
+                      ? "bg-destructive/10 text-destructive border-destructive/20"
+                      : "bg-muted/40 text-muted-foreground border-border"
+                  }`}>
+                    {overAllocated ? (
+                      <p>
+                        <strong>Over-allocated:</strong> categories add up to {formatRupees(totalAllocated)} but monthly spend is {formatRupees(profile.monthlySpend)}. Reduce a slider or raise monthly spend.
+                      </p>
+                    ) : (
+                      <div className="flex items-center justify-between gap-3">
+                        <span>Other spends (utilities, groceries, etc.)</span>
+                        <strong className="text-foreground">{formatRupees(otherAmount)}</strong>
+                      </div>
+                    )}
+                  </div>
 
                   <div className="pt-4 border-t border-border">
-                    <Button onClick={() => setStep(2)} className="w-full" size="lg">
+                    <Button
+                      onClick={() => setStep(2)}
+                      className="w-full"
+                      size="lg"
+                      disabled={profile.monthlySpend < 1000 || overAllocated}
+                    >
                       Continue
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
@@ -203,7 +306,6 @@ export function AdvisorClient({ allCards }: AdvisorClientProps) {
             </motion.div>
           )}
 
-          {/* Step 2: Preferences */}
           {step === 2 && (
             <motion.div
               key="step2"
@@ -216,69 +318,64 @@ export function AdvisorClient({ allCards }: AdvisorClientProps) {
                 <CardHeader>
                   <CardTitle>Your Preferences</CardTitle>
                   <CardDescription>
-                    Help us understand what matters most to you
+                    Pick the things that matter to you. Each toggle nudges the ranking.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-3">
-                    <label className="font-medium text-foreground">Monthly Credit Card Spend</label>
-                    <div className="flex items-center gap-4">
-                      <Input
-                        type="number"
-                        value={profile.monthlySpend}
-                        onChange={(e) => setProfile({ ...profile, monthlySpend: parseInt(e.target.value) || 0 })}
-                        className="flex-1"
-                      />
-                      <span className="text-muted-foreground">per month</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <label className="font-medium text-foreground">Card Preferences</label>
-                    <div className="space-y-3">
+                <CardContent className="space-y-4">
+                  {[
+                    {
+                      key: "preferFreeCards" as const,
+                      icon: Wallet,
+                      title: "No annual fee",
+                      desc: "Show only lifetime free cards",
+                    },
+                    {
+                      key: "needsLoungeAccess" as const,
+                      icon: Plane,
+                      title: "Airport lounge access",
+                      desc: "Must include complimentary lounge visits",
+                    },
+                    {
+                      key: "prioritizeForex" as const,
+                      icon: Globe,
+                      title: "Frequent international travel",
+                      desc: "Prioritize cards with low forex markup",
+                    },
+                    {
+                      key: "prioritizeWelcomeBonus" as const,
+                      icon: Gift,
+                      title: "Strong welcome bonus matters",
+                      desc: "Favor cards with high joining benefits",
+                    },
+                  ].map((opt) => {
+                    const active = profile[opt.key]
+                    return (
                       <button
-                        onClick={() => setProfile({ ...profile, preferFreeCards: !profile.preferFreeCards })}
+                        key={opt.key}
+                        onClick={() => togglePreference(opt.key)}
                         className={`w-full p-4 rounded-lg border text-left transition-colors ${
-                          profile.preferFreeCards 
-                            ? "border-primary bg-primary/5" 
-                            : "border-border hover:border-primary/50"
+                          active ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
                         }`}
                       >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium text-foreground">No Annual Fee Cards Only</p>
-                            <p className="text-sm text-muted-foreground">Show only lifetime free cards</p>
-                          </div>
-                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                            profile.preferFreeCards ? "border-primary bg-primary" : "border-muted-foreground"
+                        <div className="flex items-start gap-3">
+                          <div className={`p-2 rounded-lg shrink-0 ${
+                            active ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
                           }`}>
-                            {profile.preferFreeCards && <Check className="h-3 w-3 text-primary-foreground" />}
+                            <opt.icon className="h-4 w-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-foreground">{opt.title}</p>
+                            <p className="text-sm text-muted-foreground">{opt.desc}</p>
+                          </div>
+                          <div className={`mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                            active ? "border-primary bg-primary" : "border-muted-foreground"
+                          }`}>
+                            {active && <Check className="h-3 w-3 text-primary-foreground" />}
                           </div>
                         </div>
                       </button>
-
-                      <button
-                        onClick={() => setProfile({ ...profile, needsLoungeAccess: !profile.needsLoungeAccess })}
-                        className={`w-full p-4 rounded-lg border text-left transition-colors ${
-                          profile.needsLoungeAccess 
-                            ? "border-primary bg-primary/5" 
-                            : "border-border hover:border-primary/50"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium text-foreground">Airport Lounge Access Required</p>
-                            <p className="text-sm text-muted-foreground">Must have complimentary lounge visits</p>
-                          </div>
-                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                            profile.needsLoungeAccess ? "border-primary bg-primary" : "border-muted-foreground"
-                          }`}>
-                            {profile.needsLoungeAccess && <Check className="h-3 w-3 text-primary-foreground" />}
-                          </div>
-                        </div>
-                      </button>
-                    </div>
-                  </div>
+                    )
+                  })}
 
                   <div className="flex gap-3 pt-4 border-t border-border">
                     <Button variant="outline" onClick={() => setStep(1)} className="flex-1">
@@ -303,7 +400,6 @@ export function AdvisorClient({ allCards }: AdvisorClientProps) {
             </motion.div>
           )}
 
-          {/* Step 3: Results */}
           {step === 3 && (
             <motion.div
               key="step3"
