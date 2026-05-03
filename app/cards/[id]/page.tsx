@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { getCardById, getCards } from "@/lib/db/cards"
 import { getSimilarCards } from "@/lib/db/recommendations"
 import { createPublicClient } from "@/lib/db/public-client"
+import { getOffersByCardSlug } from "@/lib/db/offers"
 import { CardDetailsClient } from "./card-details-client"
 
 interface CardDetailsPageProps {
@@ -45,9 +46,10 @@ export default async function CardDetailsPage({ params }: CardDetailsPageProps) 
 
   if (!card) notFound()
 
-  const [similarCards, dataLastVerifiedAt] = await Promise.all([
+  const [similarCards, dataLastVerifiedAt, offers] = await Promise.all([
     getSimilarCards(id, 12),
     getVerificationDate(id),
+    getOffersByCardSlug(id, 9),
   ])
 
   return (
@@ -55,6 +57,7 @@ export default async function CardDetailsPage({ params }: CardDetailsPageProps) 
       card={card}
       similarCards={similarCards}
       dataLastVerifiedAt={dataLastVerifiedAt}
+      offers={offers}
     />
   )
 }

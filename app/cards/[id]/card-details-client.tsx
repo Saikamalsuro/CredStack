@@ -25,12 +25,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { CreditCardVisual } from "@/components/cards/credit-card-visual"
 import { CardGridItem } from "@/components/cards/card-grid-item"
+import { OfferCard } from "@/components/offers/offer-card"
 import type { CreditCard } from "@/lib/data/cards"
+import type { Offer } from "@/lib/types/offers"
 
 interface CardDetailsClientProps {
   card: CreditCard
   similarCards: CreditCard[]
   dataLastVerifiedAt?: string | null
+  offers?: Offer[]
 }
 
 type SimilarFilter =
@@ -64,7 +67,7 @@ function applySimilarFilter(cards: CreditCard[], filter: SimilarFilter): CreditC
   return cards.filter((c) => c.category.includes(cat as CreditCard["category"][number]))
 }
 
-export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt }: CardDetailsClientProps) {
+export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt, offers = [] }: CardDetailsClientProps) {
   const [similarFilter, setSimilarFilter] = useState<SimilarFilter>("all")
 
   const filteredSimilar = useMemo(
@@ -490,6 +493,30 @@ export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt }: Ca
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Active offers */}
+        {offers.length > 0 && (
+          <div className="mt-16">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+              <div>
+                <h2 className="font-display text-2xl font-bold text-foreground">
+                  Active Offers
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Scraped from public bank and merchant sources. Verify on the issuer site before transacting.
+                </p>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {offers.length} offer{offers.length === 1 ? "" : "s"}
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {offers.map((o) => (
+                <OfferCard key={o.id} offer={o} />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Similar cards */}
         {similarCards.length > 0 && (

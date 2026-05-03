@@ -8,12 +8,12 @@ export const expireOldOffers = inngest.createFunction(
   },
   async () => {
     const supabase = createAdminClient()
-    const today = new Date().toISOString().slice(0, 10)
+    const now = new Date().toISOString()
     const { error, count } = await supabase
       .from('offers')
       .update({ is_active: false }, { count: 'exact' })
       .eq('is_active', true)
-      .lt('valid_until', today)
+      .lt('ends_at', now)
     if (error) throw error
     return { expired: count ?? 0 }
   }

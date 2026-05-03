@@ -10,6 +10,6 @@ export type Events = {
     data: { runId: string; userId: string; filePath: string; userCardId: string | null }
   }
   'offers.scrape.requested': {
-    data: { merchant: string; url: string; extractor: string }
+    data: { sourceSlug?: string }
   }
 }
