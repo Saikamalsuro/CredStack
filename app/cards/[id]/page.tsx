@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
 import { getCardById, getCards } from "@/lib/db/cards"
+import { getSimilarCards } from "@/lib/db/recommendations"
 import { createPublicClient } from "@/lib/db/public-client"
 import { CardDetailsClient } from "./card-details-client"
 
@@ -44,14 +45,10 @@ export default async function CardDetailsPage({ params }: CardDetailsPageProps) 
 
   if (!card) notFound()
 
-  const [all, dataLastVerifiedAt] = await Promise.all([
-    getCards(),
+  const [similarCards, dataLastVerifiedAt] = await Promise.all([
+    getSimilarCards(id, 3),
     getVerificationDate(id),
   ])
-
-  const similarCards = all
-    .filter((c) => c.id !== card.id && c.category.some((cat) => card.category.includes(cat)))
-    .slice(0, 3)
 
   return (
     <CardDetailsClient
