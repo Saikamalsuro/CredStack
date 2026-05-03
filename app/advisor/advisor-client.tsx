@@ -336,8 +336,8 @@ export function AdvisorClient({ allCards }: AdvisorClientProps) {
                 <Button variant="outline" onClick={() => { setStep(1); setRecommendations([]) }}>
                   Start Over
                 </Button>
-                <Button asChild>
-                  <Link href="/compare">
+                <Button asChild disabled={recommendations.length === 0}>
+                  <Link href={`/compare?cards=${recommendations.map((c) => c.id).join(",")}`}>
                     Compare These Cards
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Link>
