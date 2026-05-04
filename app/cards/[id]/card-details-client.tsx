@@ -28,6 +28,11 @@ import { CardGridItem } from "@/components/cards/card-grid-item"
 import { OfferCard } from "@/components/offers/offer-card"
 import type { CreditCard } from "@/lib/data/cards"
 import type { Offer } from "@/lib/types/offers"
+import {
+  getApplyUrl,
+  isInviteOnly,
+  isDiscontinued,
+} from "@/lib/data/card-apply-urls"
 
 interface CardDetailsClientProps {
   card: CreditCard
@@ -187,10 +192,47 @@ export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt, offe
 
               {/* CTAs */}
               <div className="flex flex-wrap gap-3 mt-8">
-                <Button size="lg" className="bg-gradient-to-r from-primary to-accent hover:opacity-90">
-                  Apply Now
-                  <ExternalLink className="h-4 w-4 ml-2" />
-                </Button>
+                {(() => {
+                  const applyUrl = getApplyUrl(card.id)
+                  const invite = isInviteOnly(card.id)
+                  const discontinued = isDiscontinued(card.id)
+
+                  if (discontinued) {
+                    return (
+                      <Button size="lg" disabled className="bg-gradient-to-r from-primary to-accent opacity-60">
+                        Not accepting applications
+                      </Button>
+                    )
+                  }
+
+                  if (!applyUrl) {
+                    return (
+                      <Button size="lg" disabled className="bg-gradient-to-r from-primary to-accent opacity-60">
+                        Coming soon
+                      </Button>
+                    )
+                  }
+
+                  const label = invite ? "Express Interest" : "Apply Now"
+
+                  return (
+                    <Button
+                      size="lg"
+                      asChild
+                      className="bg-gradient-to-r from-primary to-accent hover:opacity-90"
+                    >
+                      <a
+                        href={applyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${label} for ${card.name} (opens in new tab)`}
+                      >
+                        {label}
+                        <ExternalLink className="h-4 w-4 ml-2" />
+                      </a>
+                    </Button>
+                  )
+                })()}
                 <Button variant="outline" size="lg" asChild>
                   <Link href={`/cards/${card.id}/add`}>
                     <CreditCardIcon className="h-4 w-4 mr-2" />
