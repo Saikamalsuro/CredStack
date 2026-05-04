@@ -110,7 +110,7 @@ export function Header({ displayName }: { displayName?: string | null }) {
                 <span className="font-medium text-foreground max-w-[140px] truncate">{displayName}</span>
               </span>
               <form action="/auth/signout" method="post">
-                <Button type="submit" variant="outline" size="sm" suppressHydrationWarning>
+                <Button type="submit" variant="outline" size="sm">
                   <LogOut className="h-4 w-4 sm:mr-2" />
                   <span className="hidden sm:inline">Sign out</span>
                 </Button>
