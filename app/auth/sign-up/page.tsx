@@ -56,7 +56,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
 
           <form action={loginWithGoogle}>
             <input type="hidden" name="redirect" value="/" />
-            <Button variant="outline" className="w-full" type="submit" suppressHydrationWarning>
+            <Button variant="outline" className="w-full" type="submit">
               <GoogleIcon className="h-4 w-4 mr-2" />
               Continue with Google
             </Button>
@@ -110,7 +110,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
               />
               <p className="text-xs text-muted-foreground">At least 6 characters</p>
             </div>
-            <Button type="submit" className="w-full" suppressHydrationWarning>Create account</Button>
+            <Button type="submit" className="w-full">Create account</Button>
           </form>
 
           <p className="text-sm text-center text-muted-foreground">

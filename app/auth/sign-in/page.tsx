@@ -32,7 +32,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
           <form action={loginWithGoogle}>
             <input type="hidden" name="redirect" value={redirectTo ?? "/"} />
-            <Button variant="outline" className="w-full" type="submit" suppressHydrationWarning>
+            <Button variant="outline" className="w-full" type="submit">
               <GoogleIcon className="h-4 w-4 mr-2" />
               Continue with Google
             </Button>
@@ -74,7 +74,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                 defaultValue=""
               />
             </div>
-            <Button type="submit" className="w-full" suppressHydrationWarning>Log in</Button>
+            <Button type="submit" className="w-full">Log in</Button>
           </form>
 
           <p className="text-sm text-center text-muted-foreground">
