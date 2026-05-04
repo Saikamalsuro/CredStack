@@ -55,6 +55,7 @@ function ToggleGroupItem({
       data-slot="toggle-group-item"
       data-variant={context.variant || variant}
       data-size={context.size || size}
+      suppressHydrationWarning
       className={cn(
         toggleVariants({
           variant: context.variant || variant,
