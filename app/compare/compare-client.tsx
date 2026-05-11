@@ -232,6 +232,8 @@ export function CompareClient({ allCards, netValues }: CompareClientProps) {
                       return (
                         <button
                           key={card.id}
+                          type="button"
+                          suppressHydrationWarning
                           onClick={() => !isSelected && addCard(card.id)}
                           disabled={isSelected}
                           className={cn(

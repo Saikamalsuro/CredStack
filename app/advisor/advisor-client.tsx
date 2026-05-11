@@ -352,6 +352,8 @@ export function AdvisorClient({ allCards }: AdvisorClientProps) {
                     return (
                       <button
                         key={opt.key}
+                        type="button"
+                        suppressHydrationWarning
                         onClick={() => togglePreference(opt.key)}
                         className={`w-full p-4 rounded-lg border text-left transition-colors ${
                           active ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
