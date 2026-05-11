@@ -202,6 +202,7 @@ export default function AnalyzerPage() {
                 />
                 <button
                   type="button"
+                  suppressHydrationWarning
                   onClick={triggerFile}
                   disabled={isLoading}
                   className="w-full border-2 border-dashed border-border rounded-xl p-12 text-center hover:border-primary/50 transition-colors cursor-pointer disabled:cursor-not-allowed"

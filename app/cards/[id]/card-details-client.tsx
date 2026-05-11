@@ -584,6 +584,8 @@ export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt, offe
                 return (
                   <button
                     key={f.id}
+                    type="button"
+                    suppressHydrationWarning
                     onClick={() => !disabled && setSimilarFilter(f.id)}
                     disabled={disabled}
                     className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
