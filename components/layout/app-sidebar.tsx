@@ -29,6 +29,7 @@ import {
   Bookmark,
   ClipboardList,
   Gift,
+  Lock,
 } from "lucide-react"
 import {
   Sheet,
@@ -59,6 +60,7 @@ const PRIMARY: SidebarLink[] = [
   { href: "/dashboard/applications", name: "Applications", icon: ClipboardList, description: "Track in-flight applications" },
   { href: "/dashboard/referrals", name: "Referrals", icon: Gift, description: "Pending referral bonuses" },
   { href: "/dashboard/tax-export", name: "Tax Export", icon: FileText, description: "Annual ITR summary" },
+  { href: "/dashboard/privacy", name: "Privacy & Data", icon: Lock, description: "Export or delete your data" },
 ]
 
 const TOOLS: SidebarLink[] = [

@@ -11,6 +11,8 @@ import {
   Plane,
   Search,
   ArrowRight,
+  Share2,
+  CheckCircle2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -31,6 +33,44 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 
 const MAX_COMPARE = 4
+
+function ShareButton({ selectedCardIds }: { selectedCardIds: string[] }) {
+  const [copied, setCopied] = useState(false)
+
+  function handleShare() {
+    if (selectedCardIds.length === 0) return
+    const url = `${window.location.origin}/compare?cards=${selectedCardIds.join(",")}`
+    if (navigator.share) {
+      navigator.share({ title: "CredStack comparison", url }).catch(() => {
+        navigator.clipboard.writeText(url)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      })
+    } else {
+      navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
+  if (selectedCardIds.length === 0) return null
+
+  return (
+    <Button variant="outline" onClick={handleShare}>
+      {copied ? (
+        <>
+          <CheckCircle2 className="h-4 w-4 mr-2 text-success" />
+          Copied
+        </>
+      ) : (
+        <>
+          <Share2 className="h-4 w-4 mr-2" />
+          Share comparison
+        </>
+      )}
+    </Button>
+  )
+}
 
 interface CompareClientProps {
   allCards: CreditCard[]
@@ -146,14 +186,18 @@ export function CompareClient({ allCards, netValues }: CompareClientProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
+            className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4"
           >
-            <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground">
-              Compare Credit Cards
-            </h1>
-            <p className="mt-3 text-lg text-muted-foreground max-w-2xl">
-              Select up to {MAX_COMPARE} cards to compare features, fees, rewards,
-              and benefits side by side.
-            </p>
+            <div>
+              <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground">
+                Compare Credit Cards
+              </h1>
+              <p className="mt-3 text-lg text-muted-foreground max-w-2xl">
+                Select up to {MAX_COMPARE} cards to compare features, fees, rewards,
+                and benefits side by side.
+              </p>
+            </div>
+            <ShareButton selectedCardIds={selectedCardIds} />
           </motion.div>
         </div>
       </div>
