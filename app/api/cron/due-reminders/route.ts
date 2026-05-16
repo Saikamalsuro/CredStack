@@ -5,10 +5,10 @@ import { sendDueReminderEmail, getResend } from '@/lib/email/resend'
 /**
  * Daily cron — fires at 9 AM IST via Vercel Cron (see vercel.json).
  * Iterates all users with payments due in next 14 days, sends in-app
- * notification + email (when Resend wired). Single Vercel cron firing per day
- * is the primary safeguard against duplicate emails; a future migration will
- * add `card_payments.last_reminded_on` so re-runs (manual / retried) become
- * cheap no-ops.
+ * notification + email (when Resend wired). Idempotent per (payment, IST day):
+ * each card_payment row carries `last_reminded_on`. After a successful email
+ * we stamp today's IST date; the cron filter excludes payments already
+ * reminded today so duplicate firings (manual retry, double cron) are no-ops.
  */
 const IST_OFFSET_MINUTES = 5 * 60 + 30
 
@@ -45,13 +45,14 @@ export async function GET(request: Request) {
   const { data: payments, error } = await supabase
     .from('card_payments')
     .select(`
-      id, user_id, due_date, total_due, min_due, paid_at,
+      id, user_id, due_date, total_due, min_due, paid_at, last_reminded_on,
       user_cards!inner(cards!inner(name)),
       profiles!inner(email, full_name)
     `)
     .is('paid_at', null)
     .gte('due_date', today)
     .lte('due_date', horizon)
+    .or(`last_reminded_on.is.null,last_reminded_on.lt.${today}`)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
@@ -96,6 +97,12 @@ export async function GET(request: Request) {
         emailSent: !result.error,
         error: result.error,
       })
+      if (!result.error) {
+        await supabase
+          .from('card_payments')
+          .update({ last_reminded_on: today })
+          .eq('id', r.paymentId)
+      }
     }
   }
 

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { requireAuth } from '@/lib/auth/helpers'
 import { addUserCard } from '@/lib/db/user-cards'
+import { isSameOrigin } from '@/lib/auth/same-origin'
 
 const RequestSchema = z.object({
   cardSlug: z.string().min(1),
@@ -13,6 +14,9 @@ const RequestSchema = z.object({
 })
 
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
   const user = await requireAuth('/auth/sign-in')
   const body = await request.json()
   const parsed = RequestSchema.safeParse(body)

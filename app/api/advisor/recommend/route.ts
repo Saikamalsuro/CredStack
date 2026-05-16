@@ -12,6 +12,7 @@ import { cacheJson } from '@/lib/cache/redis'
 import { rateLimit } from '@/lib/cache/ratelimit'
 import { getCurrentUser } from '@/lib/auth/helpers'
 import { saveAdvisorSession } from '@/lib/db/advisor-sessions'
+import { isSameOrigin } from '@/lib/auth/same-origin'
 import type { CreditCard } from '@/lib/data/cards'
 import type { CardExtended } from '@/lib/types/extended'
 import { createHash } from 'node:crypto'
@@ -40,6 +41,9 @@ function stripExtended(card: CardExtended): CreditCard {
 }
 
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
   const user = await getCurrentUser()
   const identifier = user?.id ?? request.headers.get('x-forwarded-for') ?? 'anon'
 

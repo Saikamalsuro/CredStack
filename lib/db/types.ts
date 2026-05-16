@@ -310,6 +310,7 @@ export type Database = {
           created_at: string
           due_date: string
           id: string
+          last_reminded_on: string | null
           min_due: number
           paid_amount: number | null
           paid_at: string | null
@@ -321,6 +322,7 @@ export type Database = {
           created_at?: string
           due_date: string
           id?: string
+          last_reminded_on?: string | null
           min_due: number
           paid_amount?: number | null
           paid_at?: string | null
@@ -332,6 +334,7 @@ export type Database = {
           created_at?: string
           due_date?: string
           id?: string
+          last_reminded_on?: string | null
           min_due?: number
           paid_amount?: number | null
           paid_at?: string | null
