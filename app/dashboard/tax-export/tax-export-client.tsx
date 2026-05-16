@@ -19,8 +19,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Download, FileText, IndianRupee, BarChart3 } from "lucide-react"
-import type { TaxYearReport } from "@/lib/db/tax-export"
-import { toCsv } from "@/lib/db/tax-export"
+import type { TaxYearReport } from "@/lib/db/tax-export-types"
+import { toCsv } from "@/lib/db/tax-export-format"
 
 interface Props {
   report: TaxYearReport
