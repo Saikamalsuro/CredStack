@@ -663,6 +663,259 @@ export const ARTICLES: AcademyArticle[] = [
       { href: '/cards', label: 'Premium cards in catalogue' },
     ],
   },
+  {
+    slug: 'hitting-fee-waiver-thresholds',
+    level: 'intermediate',
+    title: 'Hitting annual fee waiver thresholds — the year-end nudge',
+    excerpt:
+      'Most paid cards waive next year\'s fee if you cross a spend threshold. Knowing the number and pacing toward it earns the fee back automatically.',
+    readMinutes: 4,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'Banks set fee-waiver criteria as a profitability test: spend enough that the card is profitable to them via interchange fees, and they will waive the annual fee. The threshold is usually 6-10× the fee.',
+      },
+      {
+        heading: 'Typical waiver thresholds',
+        list: [
+          'HDFC Millennia / MoneyBack+ (₹500 fee) → ₹1L annual spend.',
+          'SBI ELITE (₹4,999 fee) → ₹10L annual spend.',
+          'Axis Magnus (₹12,500 fee) → ₹15L annual spend.',
+          'HDFC Infinia (₹12,500 fee) → ₹8L annual spend.',
+          'Amex Platinum Travel (₹5,000 fee) → ₹4L annual spend.',
+          'IDFC Wealth (₹50,000 fee) → ₹20L annual spend or Wealth banking relationship.',
+        ],
+      },
+      {
+        heading: 'How to pace toward it',
+        list: [
+          'Check your current spend mid-October. Indian cards usually waive based on the prior fiscal year (April-March) or 365 days from issuance.',
+          'If you are 80%+ to threshold, route discretionary spend (insurance premiums, EMI down payments) to the card to bridge the gap.',
+          'Skip wallet loads — most issuers exclude them from waiver-counting spend.',
+          'Skip fuel — many cards (HDFC, Amex) exclude fuel from waiver maths even when it earns rewards.',
+        ],
+      },
+      {
+        heading: 'When the math does not work',
+        body:
+          'If you are below 50% of threshold with 90 days left, don\'t force spend just to chase waiver. ₹1L of unnecessary spend to save ₹500 fee is irrational. Either negotiate retention (see premium card retention article) or downgrade.',
+      },
+      {
+        heading: 'What counts',
+        body:
+          'Read the small print on each card. Common exclusions:',
+        list: [
+          'Wallet loads (Amazon Pay, Paytm, MobiKwik).',
+          'Fuel transactions.',
+          'Cash withdrawals (always excluded; also incur 2.5-3.5% fee).',
+          'Rent payments via third-party rent platforms (CRED Rentpay, NoBroker — now flagged separately).',
+          'EMI conversions (banks treat as principal, not new spend).',
+        ],
+      },
+    ],
+    relatedLinks: [
+      { href: '/dashboard/cards', label: 'Track spend toward fee waiver' },
+      { href: '/learn/annual-fee-vs-lifetime-free', label: 'When to pay annual fee' },
+      { href: '/learn/premium-card-retention', label: 'Retention conversation' },
+    ],
+  },
+  {
+    slug: 'tax-implications-of-card-rewards',
+    level: 'intermediate',
+    title: 'Tax implications of credit card rewards — what the ITR actually wants',
+    excerpt:
+      'Cashback above ₹50K/year may need disclosure. Reward points generally do not. Foreign spend triggers Schedule FA. Here is the precise picture.',
+    readMinutes: 5,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'Indian tax treatment of credit card rewards is grey-zone territory. The Income Tax Department hasn\'t issued definitive guidance, but case law and CA consensus suggest three rules of thumb.',
+      },
+      {
+        heading: '1. Reward points — generally not taxable',
+        body:
+          'Reward points and miles earned on personal spending are treated as a discount, not income. CBDT has not classified them as taxable income. Most CAs treat them as out-of-scope for ITR — provided redemption is for personal use.',
+        list: [
+          'Exception: if you redeem reward points for cash transfer to bank account (rare in India), the cash value may be questioned.',
+          'Reward points earned on business expenditure (claimed as business expense) are arguably reducing the expense, not creating income.',
+        ],
+      },
+      {
+        heading: '2. Cashback — borderline, especially above ₹50K/year',
+        body:
+          'Cashback credited directly to your statement is reducing an expense. But large-volume cashback that resembles income (>₹50K/year on a single card) has been flagged in some ITR notices. CA consensus:',
+        list: [
+          'Below ₹50K aggregate — almost certainly safe, treat as expense reduction.',
+          '₹50K-2L — disclose under "income from other sources" to be safe; minor tax impact.',
+          'Above ₹2L — consult CA. Cashback at this scale on a personal card is unusual; may trigger profit/profession scrutiny.',
+        ],
+      },
+      {
+        heading: '3. Foreign currency spend — Schedule FA / Schedule FSI',
+        body:
+          'If your annual foreign currency spend exceeds ₹2L (TCS threshold) you should:',
+        list: [
+          'Track all foreign spend (CredStack tax export does this).',
+          'TCS at 5-20% is deducted on most foreign card transactions above ₹7L cumulative under LRS.',
+          'Schedule FA discloses foreign assets — typically not triggered by card spend alone, but high travel volume can.',
+          'Foreign-sourced income (overseas job income paid via card-linked account) triggers Schedule FSI.',
+        ],
+      },
+      {
+        heading: '4. Welcome bonuses on credit cards',
+        body:
+          'Welcome bonuses tied to spend (e.g. ₹500 voucher on activation) are also expense reductions. Welcome bonuses NOT tied to spend (rare; some referral bonuses) could be income — disclose if above ₹50K.',
+      },
+      {
+        heading: 'Practical advice',
+        body:
+          'For 99% of users earning <₹50K aggregate cashback + reward points: no disclosure needed. Use CredStack\'s tax export annually to track foreign spend and aggregate cashback. If unsure, ask your CA — but don\'t over-engineer for typical personal-use volumes.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/dashboard/tax-export', label: 'Export annual summary for ITR' },
+      { href: '/safety/rbi-updates', label: 'RBI rules affecting cardholders' },
+      { href: '/learn/forex-markup-explained', label: 'Forex markup and TCS' },
+    ],
+  },
+  {
+    slug: 'travel-hacking-with-indian-cards',
+    level: 'advanced',
+    title: 'Travel hacking with Indian credit cards (2026 playbook)',
+    excerpt:
+      'Business-class redemptions for ₹40K instead of ₹4L cash. The Indian travel hacking ecosystem is smaller than US/EU but the few playbooks that work, work well.',
+    readMinutes: 6,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'Travel hacking is the art of converting credit card spend into outsized travel value through reward arbitrage. India has fewer transfer partners than the US, but the playbooks that exist deliver 3-5× value.',
+      },
+      {
+        heading: 'The four high-value transfer routes (May 2026)',
+        list: [
+          'HDFC Infinia / Diners Black → Marriott Bonvoy (1:1). Stack with Marriott category 1-3 properties for sub-1.5K-point nights.',
+          'Axis Atlas → Marriott Bonvoy (1:5). 5x the inbound currency; the best Indian transfer rate.',
+          'Amex MR → Singapore KrisFlyer (2:1, occasional 1:1 bonuses). Premium-cabin Star Alliance redemptions.',
+          'Amex MR → British Airways Avios (2:1). Short-haul intra-Asia redemptions at low avios cost.',
+        ],
+      },
+      {
+        heading: 'The Maharaja Club opportunity (post Vistara merger)',
+        body:
+          'Air India\'s Maharaja Club joined Star Alliance in late 2025. This means:',
+        list: [
+          'Earn Maharaja miles on Lufthansa, Singapore, Turkish, United flights.',
+          'Redeem Maharaja miles on Star Alliance partners.',
+          'Status match from any Star Alliance Gold (KrisFlyer Gold, United Premier Gold, Lufthansa Senator) into Maharaja Club Gold.',
+          'Axis Vistara Signature / Infinite holders inherited status into Maharaja Club at 1:1.',
+        ],
+      },
+      {
+        heading: 'Welcome bonus rotation strategy',
+        body:
+          'A premium card welcome bonus is typically worth ₹3K-15K. Smart applicants take one bonus, hold the card 12 months (to preserve CIBIL credit age), then either downgrade to LTF or move to next bonus. Caveats:',
+        list: [
+          'No applying for more than 1 premium card per 6 months — hard CIBIL enquiries stack up.',
+          'Don\'t close the card before retention is offered (most issuers offer it at 11-12 month mark).',
+          'Track via CredStack Applications tracker so you don\'t lose track of which year is which.',
+        ],
+      },
+      {
+        heading: 'Lounge maximisation',
+        body:
+          'Indian cards with unlimited domestic + international lounge access:',
+        list: [
+          'HDFC Infinia — unlimited domestic + 12 international via Priority Pass.',
+          'Axis Reserve — unlimited both.',
+          'Amex Platinum Charge — unlimited both via Centurion + Priority Pass.',
+          'Stack with non-flying companions — most cards allow 1 guest per visit, occasionally 2. A family of 4 travelling on one cardholder\'s benefits = ₹8-10K saved per trip.',
+        ],
+      },
+      {
+        heading: 'What does NOT work (yet)',
+        list: [
+          'No US-style sign-on-100K-points-on-3K-spend bonuses. Indian welcome offers are smaller, more spend-tied.',
+          'No domestic airline transfers worth chasing (Indigo 6E Rewards lock you to IndiGo, no transfer).',
+          'No retention-bonus-on-bonus mechanic — Indian banks don\'t re-up bonuses if you keep the card.',
+        ],
+      },
+      {
+        heading: 'Worked example',
+        body:
+          'Spend ₹15L/year on Axis Atlas. Earn ~75K EDGE Miles via base + milestones. Transfer to Marriott Bonvoy (1:5) = 375K Bonvoy points. That redeems for 4-5 nights at Marriott category 4 properties (Bangalore Marriott Whitefield, Marriott Goa). Cash value: ~₹80K-1L. Effective return: 5.3-6.7%. After ₹5K annual fee: net ₹75-95K. Versus generic-card 1.5% return on same spend = ₹22.5K. Differential = ₹50-70K/year.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/learn/rewards', label: 'All reward programmes' },
+      { href: '/learn/optimal-portfolio-high-spend', label: 'Premium portfolio architecture' },
+      { href: '/cards', label: 'Cards by lounge access' },
+    ],
+  },
+  {
+    slug: 'concierge-benefit-utilisation',
+    level: 'advanced',
+    title: 'Premium card concierge — what it can actually do for you',
+    excerpt:
+      'Most premium cardholders never call concierge. The ones who do save 4-10 hours/month on bookings, errands, and dispute escalation.',
+    readMinutes: 4,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'Premium cards (₹10K+ annual fee) bundle 24x7 concierge. It is usually outsourced to Quintessentially, Aspire Lifestyles, or Ten Lifestyle. Most cardholders treat it as a marketing feature. Power users treat it as a personal assistant.',
+      },
+      {
+        heading: 'What concierge actually does well',
+        list: [
+          'Restaurant reservations — particularly hard-to-book Mumbai/Delhi/Bangalore spots. Concierge has industry relationships, gets you in faster than OpenTable.',
+          'Flight changes / cancellations — they negotiate with airline on your behalf, sometimes getting fee waivers retail customers cannot.',
+          'Hotel upgrades — pre-arrival call to property mentioning your concierge often nets a complimentary upgrade.',
+          'Gift sourcing — flowers, hampers, last-minute orders. They have vendor lists in 40+ cities.',
+          'Visa applications — they will fill out and lodge premium visa applications (UK, Schengen) for you.',
+        ],
+      },
+      {
+        heading: 'What concierge does not do',
+        list: [
+          'Travel insurance claims — go through the bank\'s nodal insurance partner directly.',
+          'Bank dispute resolution — concierge can\'t override fraud-claim timelines.',
+          'Tax / legal advice — refer-out only.',
+          'Anything illegal or grey-zone — they have liability rules.',
+        ],
+      },
+      {
+        heading: 'How to use concierge effectively',
+        list: [
+          'Treat it like a chief-of-staff: give clear, written briefs by email rather than vague phone asks.',
+          'Build a relationship — same agent helps repeatedly if you ask. Most have email handles for direct contact.',
+          'Give 48-72 hour lead time for international requests (visa, travel rebooking).',
+          'Provide context: budget, preferences, deadline. Vague briefs get vague responses.',
+        ],
+      },
+      {
+        heading: 'Cards with best concierge (May 2026)',
+        list: [
+          'Amex Platinum Charge — Quintessentially. Highest-touch, fastest response (typically <2 hours).',
+          'HDFC Infinia / Diners Black — Aspire Lifestyles. Strong on India-specific bookings.',
+          'Axis Reserve — Ten Lifestyle. Better international than domestic.',
+          'ICICI Emeralde Private Metal — Aspire. Solid but less premium-feel than Amex.',
+        ],
+      },
+      {
+        heading: 'Worth it?',
+        body:
+          'If you save 4 hours/month on bookings + errands and value your time at ₹2K/hour, that is ₹96K/year of utility. The annual fee differential vs a mid-tier card is ₹40-60K. Net positive at moderate time-value. Disregard if you have a personal assistant or low time-value.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/learn/optimal-portfolio-high-spend', label: 'Premium portfolio architecture' },
+      { href: '/learn/premium-card-retention', label: 'Retention conversation' },
+      { href: '/cards?category=premium', label: 'Premium cards in catalogue' },
+    ],
+  },
 ]
 
 export function getArticle(slug: string): AcademyArticle | undefined {
