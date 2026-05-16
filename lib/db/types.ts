@@ -1059,6 +1059,105 @@ export type Database = {
           },
         ]
       }
+      user_applications: {
+        Row: {
+          applied_date: string
+          card_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          reference_number: string | null
+          status: Database["public"]["Enums"]["application_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          applied_date: string
+          card_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          reference_number?: string | null
+          status?: Database["public"]["Enums"]["application_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          applied_date?: string
+          card_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          reference_number?: string | null
+          status?: Database["public"]["Enums"]["application_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_referrals: {
+        Row: {
+          card_id: string | null
+          created_at: string
+          credited_date: string | null
+          expected_bonus: number | null
+          id: string
+          notes: string | null
+          referred_date: string
+          referred_name: string
+          status: Database["public"]["Enums"]["referral_status"]
+          user_id: string
+        }
+        Insert: {
+          card_id?: string | null
+          created_at?: string
+          credited_date?: string | null
+          expected_bonus?: number | null
+          id?: string
+          notes?: string | null
+          referred_date?: string
+          referred_name: string
+          status?: Database["public"]["Enums"]["referral_status"]
+          user_id: string
+        }
+        Update: {
+          card_id?: string | null
+          created_at?: string
+          credited_date?: string | null
+          expected_bonus?: number | null
+          id?: string
+          notes?: string | null
+          referred_date?: string
+          referred_name?: string
+          status?: Database["public"]["Enums"]["referral_status"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_wishlists: {
+        Row: {
+          card_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          card_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          card_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_lounge_visits: {
         Row: {
           created_at: string
@@ -1144,7 +1243,21 @@ export type Database = {
         | "premium"
         | "fuel"
         | "shopping"
+      application_status:
+        | "applied"
+        | "under_review"
+        | "approved"
+        | "rejected"
+        | "received"
       card_network: "visa" | "mastercard" | "amex" | "rupay" | "discover"
+      card_tier:
+        | "entry"
+        | "lifestyle"
+        | "premium"
+        | "super_premium"
+        | "secured"
+        | "student"
+      referral_status: "pending" | "credited" | "rejected"
       confidence_band: "verified" | "high" | "medium" | "low"
       offer_category:
         | "food_delivery"

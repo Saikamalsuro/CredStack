@@ -1,6 +1,7 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo, useState, useTransition } from "react"
+import { addToWishlistAction, removeFromWishlistAction } from "@/app/dashboard/wishlist/actions"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { 
@@ -17,7 +18,9 @@ import {
   AlertCircle,
   ExternalLink,
   GitCompare,
-  History
+  History,
+  Bookmark,
+  BookmarkCheck
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -40,6 +43,7 @@ interface CardDetailsClientProps {
   similarCards: CreditCard[]
   dataLastVerifiedAt?: string | null
   offers?: Offer[]
+  isWishlisted?: boolean
 }
 
 type SimilarFilter =
@@ -73,8 +77,22 @@ function applySimilarFilter(cards: CreditCard[], filter: SimilarFilter): CreditC
   return cards.filter((c) => c.category.includes(cat as CreditCard["category"][number]))
 }
 
-export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt, offers = [] }: CardDetailsClientProps) {
+export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt, offers = [], isWishlisted = false }: CardDetailsClientProps) {
   const [similarFilter, setSimilarFilter] = useState<SimilarFilter>("all")
+  const [wishlisted, setWishlisted] = useState(isWishlisted)
+  const [wishPending, startWishTransition] = useTransition()
+
+  function toggleWishlist() {
+    startWishTransition(async () => {
+      if (wishlisted) {
+        await removeFromWishlistAction(card.id)
+        setWishlisted(false)
+      } else {
+        await addToWishlistAction(card.id)
+        setWishlisted(true)
+      }
+    })
+  }
 
   const filteredSimilar = useMemo(
     () => applySimilarFilter(similarCards, similarFilter),
@@ -245,6 +263,24 @@ export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt, offe
                     <GitCompare className="h-4 w-4 mr-2" />
                     Add to Compare
                   </Link>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  onClick={toggleWishlist}
+                  disabled={wishPending}
+                >
+                  {wishlisted ? (
+                    <>
+                      <BookmarkCheck className="h-4 w-4 mr-2 text-primary" />
+                      Saved
+                    </>
+                  ) : (
+                    <>
+                      <Bookmark className="h-4 w-4 mr-2" />
+                      Save
+                    </>
+                  )}
                 </Button>
                 <Button variant="ghost" size="lg" asChild>
                   <Link href={`/cards/${card.id}/changes`}>

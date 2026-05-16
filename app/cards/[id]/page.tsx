@@ -2,7 +2,9 @@ import { notFound } from "next/navigation"
 import { getCardById, getCards } from "@/lib/db/cards"
 import { getSimilarCards } from "@/lib/db/recommendations"
 import { createPublicClient } from "@/lib/db/public-client"
+import { createServerClient } from "@/lib/db/server"
 import { getOffersByCardSlug } from "@/lib/db/offers"
+import { isCardWishlisted } from "@/lib/db/wishlist"
 import { CardDetailsClient } from "./card-details-client"
 
 interface CardDetailsPageProps {
@@ -46,10 +48,16 @@ export default async function CardDetailsPage({ params }: CardDetailsPageProps) 
 
   if (!card) notFound()
 
-  const [similarCards, dataLastVerifiedAt, offers] = await Promise.all([
+  const supabase = await createServerClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const [similarCards, dataLastVerifiedAt, offers, wishlisted] = await Promise.all([
     getSimilarCards(id, 12),
     getVerificationDate(id),
     getOffersByCardSlug(id, 9),
+    user ? isCardWishlisted(user.id, id) : Promise.resolve(false),
   ])
 
   return (
@@ -58,6 +66,7 @@ export default async function CardDetailsPage({ params }: CardDetailsPageProps) 
       similarCards={similarCards}
       dataLastVerifiedAt={dataLastVerifiedAt}
       offers={offers}
+      isWishlisted={wishlisted}
     />
   )
 }
