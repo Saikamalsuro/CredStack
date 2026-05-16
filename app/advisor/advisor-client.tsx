@@ -430,6 +430,36 @@ export function AdvisorClient({ allCards }: AdvisorClientProps) {
                 ))}
               </div>
 
+              <details className="rounded-lg border bg-muted/30 p-4 text-sm">
+                <summary className="cursor-pointer font-medium">
+                  Show the math behind these recommendations
+                </summary>
+                <div className="pt-3 space-y-2 text-muted-foreground">
+                  <p>
+                    Rankings are computed deterministically. No money figure is
+                    LLM-generated. We score each catalogue card on your inputs:
+                  </p>
+                  <ul className="space-y-1 pl-4 list-disc text-xs">
+                    <li>
+                      <strong className="text-foreground">Spend mix:</strong> categories you spend &gt;25-30% in
+                      add +2 to cards that include that category.
+                    </li>
+                    <li>
+                      <strong className="text-foreground">Monthly volume:</strong> &gt;₹30K/month favours cashback cards (+1).
+                    </li>
+                    <li>
+                      <strong className="text-foreground">Rating:</strong> each star contributes 2 points.
+                    </li>
+                    <li>
+                      <strong className="text-foreground">Hard filters:</strong> &quot;prefer free&quot; drops fee-bearing cards; &quot;needs lounge&quot; drops cards with no lounge entitlement; &quot;low forex&quot; sorts by forex markup ascending.
+                    </li>
+                  </ul>
+                  <p className="text-xs">
+                    Final return on your spend depends on transaction-level data. Use the Optimizer for per-merchant decisions.
+                  </p>
+                </div>
+              </details>
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button variant="outline" onClick={() => { setStep(1); setRecommendations([]) }}>
                   Start Over

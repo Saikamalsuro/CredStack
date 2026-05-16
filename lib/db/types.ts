@@ -451,6 +451,7 @@ export type Database = {
           reward_type: Database["public"]["Enums"]["reward_type"]
           self_employed_eligible: boolean | null
           slug: string
+          tier: Database["public"]["Enums"]["card_tier"] | null
           updated_at: string
           welcome_bonus_text: string | null
           welcome_bonus_value: number | null
@@ -505,6 +506,7 @@ export type Database = {
           reward_type: Database["public"]["Enums"]["reward_type"]
           self_employed_eligible?: boolean | null
           slug: string
+          tier?: Database["public"]["Enums"]["card_tier"] | null
           updated_at?: string
           welcome_bonus_text?: string | null
           welcome_bonus_value?: number | null
@@ -559,6 +561,7 @@ export type Database = {
           reward_type?: Database["public"]["Enums"]["reward_type"]
           self_employed_eligible?: boolean | null
           slug?: string
+          tier?: Database["public"]["Enums"]["card_tier"] | null
           updated_at?: string
           welcome_bonus_text?: string | null
           welcome_bonus_value?: number | null
@@ -1059,6 +1062,54 @@ export type Database = {
           },
         ]
       }
+      card_review_votes: {
+        Row: { id: string; user_id: string; review_id: string; created_at: string }
+        Insert: { id?: string; user_id: string; review_id: string; created_at?: string }
+        Update: { id?: string; user_id?: string; review_id?: string; created_at?: string }
+        Relationships: []
+      }
+      expert_reviews: {
+        Row: {
+          id: string
+          card_id: string
+          reviewer_name: string
+          reviewer_title: string | null
+          body: string
+          rating: number | null
+          pros: string[]
+          cons: string[]
+          use_case: string | null
+          published_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          card_id: string
+          reviewer_name: string
+          reviewer_title?: string | null
+          body: string
+          rating?: number | null
+          pros?: string[]
+          cons?: string[]
+          use_case?: string | null
+          published_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          card_id?: string
+          reviewer_name?: string
+          reviewer_title?: string | null
+          body?: string
+          rating?: number | null
+          pros?: string[]
+          cons?: string[]
+          use_case?: string | null
+          published_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_applications: {
         Row: {
           applied_date: string
@@ -1214,6 +1265,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      increment_helpful_count: { Args: { p_review_id: string }; Returns: void }
+      decrement_helpful_count: { Args: { p_review_id: string }; Returns: void }
       fuzzy_match_card: {
         Args: { query: string }
         Returns: {

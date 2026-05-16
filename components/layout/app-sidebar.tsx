@@ -55,6 +55,7 @@ const PRIMARY: SidebarLink[] = [
   { href: "/dashboard", name: "Dashboard", icon: LayoutDashboard, description: "Sign in required" },
   { href: "/dashboard/cards", name: "My Cards", icon: CreditCard, description: "Cards in your portfolio" },
   { href: "/dashboard/lounges", name: "Lounge Tracker", icon: Plane, description: "Visits vs annual quota" },
+  { href: "/dashboard/transactions", name: "Transactions", icon: BarChart3, description: "Spend profiler + YoY analytics" },
   { href: "/dashboard/health-score", name: "Health Score", icon: Heart, description: "Your card health 0-100" },
   { href: "/dashboard/wishlist", name: "Wishlist", icon: Bookmark, description: "Cards saved for later" },
   { href: "/dashboard/applications", name: "Applications", icon: ClipboardList, description: "Track in-flight applications" },

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { TrendingUp, Wallet, Trophy } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
 
 interface RankItem {
   cardSlug: string
@@ -25,6 +26,20 @@ export default function OptimizerPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<{ category: string; ranked: RankItem[] } | null>(null)
+  const [onlyMyCards, setOnlyMyCards] = useState(false)
+  const [myCardSlugs, setMyCardSlugs] = useState<string[]>([])
+  const [hasUserCards, setHasUserCards] = useState(false)
+
+  useEffect(() => {
+    fetch("/api/user-cards/slugs")
+      .then((r) => r.json())
+      .then((d) => {
+        const slugs = Array.isArray(d?.slugs) ? d.slugs : []
+        setMyCardSlugs(slugs)
+        setHasUserCards(slugs.length > 0)
+      })
+      .catch(() => {})
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,7 +49,11 @@ export default function OptimizerPage() {
       const res = await fetch("/api/optimizer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ merchant, amount: Number(amount) }),
+        body: JSON.stringify({
+          merchant,
+          amount: Number(amount),
+          ...(onlyMyCards && myCardSlugs.length > 0 ? { cardSlugs: myCardSlugs } : {}),
+        }),
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
@@ -101,6 +120,18 @@ export default function OptimizerPage() {
               <Button type="submit" disabled={loading} className="sm:col-span-3">
                 {loading ? "Ranking..." : "Find best card"}
               </Button>
+              {hasUserCards && (
+                <div className="sm:col-span-3 flex items-center gap-2 pt-1">
+                  <Checkbox
+                    id="only-my-cards"
+                    checked={onlyMyCards}
+                    onCheckedChange={(v) => setOnlyMyCards(Boolean(v))}
+                  />
+                  <Label htmlFor="only-my-cards" className="text-sm font-normal cursor-pointer">
+                    Only my cards ({myCardSlugs.length} in portfolio)
+                  </Label>
+                </div>
+              )}
             </form>
             {error && (
               <div className="mt-4 text-sm bg-destructive/10 text-destructive rounded-md p-3 border border-destructive/20">
