@@ -28,14 +28,11 @@ export async function listApplications(userId: string): Promise<ApplicationEntry
     .eq('user_id', userId)
     .order('applied_date', { ascending: false })
   if (error) throw error
-  return (data ?? []).map((row) => {
-    const card = row.cards as unknown as {
-      slug: string
-      name: string
-      issuer: string
-      card_color_gradient: string
-    }
-    return {
+  type CardJoin = { slug: string; name: string; issuer: string; card_color_gradient: string }
+  return (data ?? []).flatMap((row) => {
+    const card = row.cards as unknown as CardJoin | null
+    if (!card) return []
+    return [{
       id: row.id,
       cardId: row.card_id,
       cardSlug: card.slug,
@@ -47,7 +44,7 @@ export async function listApplications(userId: string): Promise<ApplicationEntry
       referenceNumber: row.reference_number,
       notes: row.notes,
       updatedAt: row.updated_at,
-    }
+    }]
   })
 }
 

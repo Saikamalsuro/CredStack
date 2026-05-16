@@ -25,8 +25,9 @@ export async function getUpcomingPayments(userId: string): Promise<UpcomingPayme
     .limit(5)
   if (error) throw error
 
+  type Join = { cards: { name: string } | null } | null
   return (data ?? []).map((row) => {
-    const card = (row.user_cards as unknown as { cards: { name: string } }).cards
+    const card = (row.user_cards as unknown as Join)?.cards
     return {
       id: row.id,
       cardName: card?.name ?? 'Card',

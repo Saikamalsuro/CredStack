@@ -62,7 +62,12 @@ async function getUserCardSummaries(userId: string): Promise<UserCardSummary[]> 
 
 async function getLatestPayments(userId: string, months = 12) {
   const supabase = await createServerClient()
-  const since = new Date(Date.now() - months * 30 * 24 * 60 * 60 * 1000).toISOString()
+  // Subtract whole calendar months to avoid the 30*day approximation losing
+  // ~5 days/year — the resulting date is what the user actually expects when
+  // we say "last 12 months".
+  const d = new Date()
+  d.setMonth(d.getMonth() - months)
+  const since = d.toISOString()
   const { data, error } = await supabase
     .from('card_payments')
     .select('id, due_date, paid_at, total_due')
