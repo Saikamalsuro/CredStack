@@ -26,6 +26,9 @@ import {
   GraduationCap,
   Plane,
   Heart,
+  Bookmark,
+  ClipboardList,
+  Gift,
 } from "lucide-react"
 import {
   Sheet,
@@ -52,6 +55,9 @@ const PRIMARY: SidebarLink[] = [
   { href: "/dashboard/cards", name: "My Cards", icon: CreditCard, description: "Cards in your portfolio" },
   { href: "/dashboard/lounges", name: "Lounge Tracker", icon: Plane, description: "Visits vs annual quota" },
   { href: "/dashboard/health-score", name: "Health Score", icon: Heart, description: "Your card health 0-100" },
+  { href: "/dashboard/wishlist", name: "Wishlist", icon: Bookmark, description: "Cards saved for later" },
+  { href: "/dashboard/applications", name: "Applications", icon: ClipboardList, description: "Track in-flight applications" },
+  { href: "/dashboard/referrals", name: "Referrals", icon: Gift, description: "Pending referral bonuses" },
   { href: "/dashboard/tax-export", name: "Tax Export", icon: FileText, description: "Annual ITR summary" },
 ]
 
