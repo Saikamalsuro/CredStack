@@ -1116,6 +1116,9 @@ export type Database = {
           issuer?: string
           card_type?: Database["public"]["Enums"]["non_credit_card_type"]
           network?: Database["public"]["Enums"]["card_network"]
+          variant?: string | null
+          verification_status?: string | null
+          notes?: string | null
           annual_fee?: number
           joining_fee?: number
           forex_markup_pct?: number
@@ -1151,6 +1154,7 @@ export type Database = {
           pros: string[]
           cons: string[]
           use_case: string | null
+          short_summary: string | null
           published_at: string
           updated_at: string
         }
@@ -1164,6 +1168,7 @@ export type Database = {
           pros?: string[]
           cons?: string[]
           use_case?: string | null
+          short_summary?: string | null
           published_at?: string
           updated_at?: string
         }
@@ -1177,6 +1182,7 @@ export type Database = {
           pros?: string[]
           cons?: string[]
           use_case?: string | null
+          short_summary?: string | null
           published_at?: string
           updated_at?: string
         }
@@ -1375,7 +1381,7 @@ export type Database = {
         | "rejected"
         | "received"
       card_network: "visa" | "mastercard" | "amex" | "rupay" | "discover"
-      non_credit_card_type: "debit" | "prepaid"
+      non_credit_card_type: "debit" | "prepaid" | "forex"
       card_tier:
         | "entry"
         | "lifestyle"

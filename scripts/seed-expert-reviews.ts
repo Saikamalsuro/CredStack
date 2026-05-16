@@ -1,5 +1,7 @@
 /**
- * Seed expert reviews from lib/data/expert-reviews-seed.ts
+ * Seed editorial expert reviews from lib/data/expert-reviews-seed.ts
+ *
+ * Fails loudly if any cardSlug does not resolve to a real card.
  *
  * Run: npx tsx scripts/seed-expert-reviews.ts
  */
@@ -16,20 +18,25 @@ interface SeedReview {
   cardSlug: string
   reviewerName: string
   reviewerTitle?: string
-  body: string
+  useCase?: string
   rating?: number
+  shortSummary?: string
   pros?: string[]
   cons?: string[]
-  useCase?: string
+  body: string
+  publishedAt?: string
 }
 
 async function loadSeed(): Promise<SeedReview[]> {
   try {
-    // @ts-expect-error optional seed file; user provides
     const mod = await import('../lib/data/expert-reviews-seed')
-    return (mod.expertReviews as SeedReview[]) ?? []
-  } catch {
+    const arr = (mod as { expertReviewsSeed?: SeedReview[]; expertReviews?: SeedReview[] }).expertReviewsSeed
+      ?? (mod as { expertReviewsSeed?: SeedReview[]; expertReviews?: SeedReview[] }).expertReviews
+      ?? []
+    return arr
+  } catch (err) {
     console.error('No seed file at lib/data/expert-reviews-seed.ts')
+    console.error(err)
     return []
   }
 }
@@ -44,32 +51,36 @@ async function main() {
   const supabase = createAdminClient()
 
   const slugs = [...new Set(reviews.map((r) => r.cardSlug))]
-  const { data: cards } = await supabase.from('cards').select('id, slug').in('slug', slugs)
-  const slugToId = new Map<string, string>(
-    (cards ?? []).map((c) => [c.slug, c.id])
-  )
-
-  const rows: { card_id: string; reviewer_name: string; body: string; reviewer_title?: string | null; rating?: number | null; pros?: string[]; cons?: string[]; use_case?: string | null }[] = []
-  const missing: string[] = []
-  for (const r of reviews) {
-    const id = slugToId.get(r.cardSlug)
-    if (!id) {
-      missing.push(r.cardSlug)
-      continue
-    }
-    rows.push({
-      card_id: id,
-      reviewer_name: r.reviewerName,
-      reviewer_title: r.reviewerTitle ?? null,
-      body: r.body,
-      rating: r.rating ?? null,
-      pros: r.pros ?? [],
-      cons: r.cons ?? [],
-      use_case: r.useCase ?? null,
-    })
+  const { data: cards, error: lookupErr } = await supabase
+    .from('cards')
+    .select('id, slug')
+    .in('slug', slugs)
+  if (lookupErr) {
+    console.error('Card lookup failed:', lookupErr)
+    process.exit(1)
   }
 
-  if (missing.length) console.warn(`Missing card slugs: ${missing.join(', ')}`)
+  const slugToId = new Map<string, string>((cards ?? []).map((c) => [c.slug, c.id]))
+
+  const missing = slugs.filter((s) => !slugToId.has(s))
+  if (missing.length > 0) {
+    console.error(`FATAL: card slugs not found in DB: ${missing.join(', ')}`)
+    console.error('Aborting to avoid orphan reviews.')
+    process.exit(1)
+  }
+
+  const rows = reviews.map((r) => ({
+    card_id: slugToId.get(r.cardSlug)!,
+    reviewer_name: r.reviewerName,
+    reviewer_title: r.reviewerTitle ?? null,
+    body: r.body,
+    rating: r.rating ?? null,
+    pros: r.pros ?? [],
+    cons: r.cons ?? [],
+    use_case: r.useCase ?? null,
+    short_summary: r.shortSummary ?? null,
+    published_at: r.publishedAt ?? new Date().toISOString(),
+  }))
 
   console.log(`Seeding ${rows.length} expert reviews...`)
   const { error } = await supabase

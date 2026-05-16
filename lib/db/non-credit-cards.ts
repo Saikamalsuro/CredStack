@@ -1,6 +1,6 @@
 import { createPublicClient } from './public-client'
 
-export type NonCreditCardType = 'debit' | 'prepaid'
+export type NonCreditCardType = 'debit' | 'prepaid' | 'forex'
 
 export interface NonCreditCard {
   id: string
@@ -9,6 +9,7 @@ export interface NonCreditCard {
   issuer: string
   cardType: NonCreditCardType
   network: string
+  variant: string | null
   annualFee: number
   joiningFee: number
   forexMarkupPct: number
@@ -20,6 +21,8 @@ export interface NonCreditCard {
   cardColorGradient: string
   applyUrl: string | null
   dataPending: boolean
+  verificationStatus: 'verified' | 'pending'
+  notes: string | null
 }
 
 export async function getNonCreditCardsByIssuer(issuer: string): Promise<NonCreditCard[]> {
@@ -55,6 +58,7 @@ function mapRow(row: Record<string, unknown>): NonCreditCard {
     issuer: row.issuer as string,
     cardType: row.card_type as NonCreditCardType,
     network: row.network as string,
+    variant: (row.variant as string | null) ?? null,
     annualFee: row.annual_fee as number,
     joiningFee: row.joining_fee as number,
     forexMarkupPct: Number(row.forex_markup_pct),
@@ -66,5 +70,7 @@ function mapRow(row: Record<string, unknown>): NonCreditCard {
     cardColorGradient: row.card_color_gradient as string,
     applyUrl: row.apply_url as string | null,
     dataPending: row.data_pending as boolean,
+    verificationStatus: (row.verification_status as 'verified' | 'pending') ?? 'verified',
+    notes: (row.notes as string | null) ?? null,
   }
 }

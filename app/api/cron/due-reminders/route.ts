@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/db/admin'
+import { sendDueReminderEmail, getResend } from '@/lib/email/resend'
 
 /**
  * Daily cron — fires at 9 AM IST via Vercel Cron (see vercel.json).
@@ -49,14 +50,35 @@ export async function GET(request: Request) {
     }
   })
 
-  // TODO: when RESEND_API_KEY present, dispatch emails here. For now, log + return.
-  if (process.env.RESEND_API_KEY) {
-    // Email dispatch will go here once Resend is wired.
+  const emailResults: { userId: string; emailSent: boolean; error?: string }[] = []
+  if (getResend()) {
+    for (const r of reminders) {
+      if (!r.email) {
+        emailResults.push({ userId: r.userId, emailSent: false, error: 'no email on profile' })
+        continue
+      }
+      const result = await sendDueReminderEmail({
+        to: r.email,
+        fullName: r.fullName,
+        cardName: r.cardName,
+        dueDate: r.dueDate,
+        amount: r.amount,
+        daysLeft: r.daysLeft,
+      })
+      emailResults.push({
+        userId: r.userId,
+        emailSent: !result.error,
+        error: result.error,
+      })
+    }
   }
 
   return NextResponse.json({
     processedAt: new Date().toISOString(),
     count: reminders.length,
+    emailsAttempted: emailResults.length,
+    emailsSent: emailResults.filter((e) => e.emailSent).length,
+    emailErrors: emailResults.filter((e) => e.error).map((e) => ({ userId: e.userId, error: e.error })),
     reminders: reminders.slice(0, 50),
   })
 }
