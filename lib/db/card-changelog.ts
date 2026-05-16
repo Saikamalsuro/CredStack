@@ -16,6 +16,17 @@ export interface CardChangeRow extends CardChange {
   cardName: string
 }
 
+function isCardChange(v: unknown): v is CardChange {
+  if (typeof v !== 'object' || v === null) return false
+  const o = v as Record<string, unknown>
+  return typeof o.date === 'string' && typeof o.summary === 'string'
+}
+
+function coerceChangelog(raw: unknown): CardChange[] {
+  if (!Array.isArray(raw)) return []
+  return raw.filter(isCardChange)
+}
+
 export async function getCardChanges(slug: string): Promise<CardChange[]> {
   const supabase = createPublicClient()
   const { data, error } = await supabase
@@ -24,8 +35,7 @@ export async function getCardChanges(slug: string): Promise<CardChange[]> {
     .eq('slug', slug)
     .maybeSingle()
   if (error) throw error
-  const arr = (data?.changelog ?? []) as unknown as CardChange[]
-  return arr.slice().sort((a, b) => b.date.localeCompare(a.date))
+  return coerceChangelog(data?.changelog).slice().sort((a, b) => b.date.localeCompare(a.date))
 }
 
 export async function getRecentChangesForCards(slugs: string[], limit = 5): Promise<CardChangeRow[]> {
@@ -39,8 +49,7 @@ export async function getRecentChangesForCards(slugs: string[], limit = 5): Prom
 
   const rows: CardChangeRow[] = []
   for (const r of data ?? []) {
-    const arr = (r.changelog ?? []) as unknown as CardChange[]
-    for (const c of arr) {
+    for (const c of coerceChangelog(r.changelog)) {
       rows.push({ ...c, cardSlug: r.slug, cardName: r.name })
     }
   }

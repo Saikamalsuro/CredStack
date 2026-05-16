@@ -4,10 +4,14 @@ import { rateLimit } from '@/lib/cache/ratelimit'
 import { createServerClient } from '@/lib/db/server'
 import { createAnalyzerRun, setAnalyzerRunFile } from '@/lib/db/analyzer-runs'
 import { inngest } from '@/lib/jobs/client'
+import { isSameOrigin } from '@/lib/auth/same-origin'
 
 const MAX_BYTES = 10 * 1024 * 1024 // 10 MB
 
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
   const user = await requireAuth('/auth/sign-in')
 
   const limit = await rateLimit('analyzer-upload', user.id, 5, '1 d')

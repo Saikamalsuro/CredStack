@@ -193,7 +193,7 @@ export function Footer() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <p className="text-xs leading-5 text-muted-foreground">
+          <p className="text-xs leading-5 text-muted-foreground" suppressHydrationWarning>
             &copy; {new Date().getFullYear()} CredStack. All rights reserved. This site is for informational purposes only and does not constitute financial advice.
           </p>
         </motion.div>
