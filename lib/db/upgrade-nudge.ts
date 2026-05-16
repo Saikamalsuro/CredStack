@@ -59,8 +59,10 @@ export async function getUpgradeNudges(userId: string, monthlySpend = 30000): Pr
 
     const fromRate = Number(card.base_reward_rate)
     const toRate = Number(target.base_reward_rate)
-    const rateLift = toRate - fromRate
-    const annualGain = Math.round((rateLift / 100) * monthlySpend * 12 - (target.annual_fee - card.annual_fee))
+    const rateLiftBasisPoints = Math.round((toRate - fromRate) * 100)
+    // (rateLiftBP * monthlySpend rupees * 12 months) / 10_000 = annual gain in rupees
+    const grossGain = Math.round((rateLiftBasisPoints * monthlySpend * 12) / 10_000)
+    const annualGain = grossGain - (target.annual_fee - card.annual_fee)
     if (annualGain < 500) continue
 
     nudges.push({

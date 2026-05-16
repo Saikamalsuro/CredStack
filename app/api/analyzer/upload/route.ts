@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth/helpers'
 import { rateLimit } from '@/lib/cache/ratelimit'
-import { createAdminClient } from '@/lib/db/admin'
+import { createServerClient } from '@/lib/db/server'
 import { createAnalyzerRun, setAnalyzerRunFile } from '@/lib/db/analyzer-runs'
 import { inngest } from '@/lib/jobs/client'
 
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   if (file.size > MAX_BYTES) {
     return NextResponse.json({ error: 'File too large (max 10 MB)' }, { status: 413 })
   }
-  if (!file.name.toLowerCase().endsWith('.pdf')) {
+  if (!file.name.toLowerCase().endsWith('.pdf') || file.type !== 'application/pdf') {
     return NextResponse.json({ error: 'Only PDF supported' }, { status: 400 })
   }
 
@@ -34,7 +34,8 @@ export async function POST(request: Request) {
   const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
   const filePath = `${user.id}/${runId}/${filename}`
 
-  const supabase = createAdminClient()
+  // User-scoped client → storage RLS enforces only the owner can write to their prefix.
+  const supabase = await createServerClient()
   const buffer = await file.arrayBuffer()
   const { error: uploadErr } = await supabase.storage
     .from('statements')

@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server'
 import { createPublicClient } from '@/lib/db/public-client'
+import { withPublicRateLimit } from '@/lib/cache/public-rate-limit'
 
 export const revalidate = 600
 
-export async function GET() {
+export async function GET(request: Request) {
+  const rl = await withPublicRateLimit(request, 'cards-list', 60, '1 m')
+  if (rl) return rl
+
   const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('cards')

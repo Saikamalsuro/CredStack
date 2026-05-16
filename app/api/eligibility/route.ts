@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { getCards } from '@/lib/db/cards'
 import { createPublicClient } from '@/lib/db/public-client'
+import { withPublicRateLimit } from '@/lib/cache/public-rate-limit'
 
 const RequestSchema = z.object({
   monthlyIncome: z.number().nonnegative(),
@@ -39,6 +40,8 @@ function bandFromScore(score: number): Band {
 }
 
 export async function POST(request: Request) {
+  const rl = await withPublicRateLimit(request, 'eligibility', 20, '1 m')
+  if (rl) return rl
   const body = await request.json()
   const parsed = RequestSchema.safeParse(body)
   if (!parsed.success) {
