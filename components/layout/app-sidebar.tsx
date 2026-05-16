@@ -20,6 +20,10 @@ import {
   FileText,
   Phone,
   AlertOctagon,
+  Coins,
+  Smartphone,
+  Landmark,
+  GraduationCap,
 } from "lucide-react"
 import {
   Sheet,
@@ -62,12 +66,19 @@ const RESOURCES: SidebarLink[] = [
 const CALCULATORS: SidebarLink[] = [
   { href: "/tools/interest-calculator", name: "Interest Calculator", icon: Calculator, description: "Carry-balance simulator" },
   { href: "/tools/emi-calculator", name: "EMI Calculator", icon: Calculator, description: "No-cost vs interest EMI" },
+  { href: "/tools/points-converter", name: "Points Converter", icon: Coins, description: "Best reward redemption" },
+]
+
+const LEARN: SidebarLink[] = [
+  { href: "/learn/first-credit-card", name: "First Card Guide", icon: GraduationCap, description: "Beginner playbook" },
 ]
 
 const SAFETY: SidebarLink[] = [
   { href: "/apply/documents", name: "Documents Required", icon: FileText, description: "KYC checklist by profile" },
   { href: "/safety/helplines", name: "Helplines", icon: Phone, description: "Bank customer support" },
   { href: "/safety/fraud-guide", name: "Fraud Response", icon: AlertOctagon, description: "What to do if compromised" },
+  { href: "/safety/virtual-cards", name: "Virtual Cards", icon: Smartphone, description: "Tokenization support per bank" },
+  { href: "/safety/rbi-updates", name: "RBI Updates", icon: Landmark, description: "Regulatory changes that affect you" },
 ]
 
 function Section({
@@ -133,6 +144,7 @@ export function AppSidebar() {
           <Section title="Main" links={PRIMARY} pathname={pathname} onClose={close} />
           <Section title="Tools" links={TOOLS} pathname={pathname} onClose={close} />
           <Section title="Calculators" links={CALCULATORS} pathname={pathname} onClose={close} />
+          <Section title="Learn" links={LEARN} pathname={pathname} onClose={close} />
           <Section title="Resources" links={RESOURCES} pathname={pathname} onClose={close} />
           <Section title="Safety" links={SAFETY} pathname={pathname} onClose={close} />
         </nav>
