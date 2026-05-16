@@ -473,6 +473,12 @@ export function DashboardClient({
                       <span className="text-xs">My Cards</span>
                     </Link>
                   </Button>
+                  <Button variant="outline" className="h-auto py-4 flex flex-col gap-2" asChild>
+                    <Link href="/dashboard/lounges">
+                      <Plane className="h-5 w-5" />
+                      <span className="text-xs">Lounges</span>
+                    </Link>
+                  </Button>
                 </CardContent>
               </Card>
             </motion.div>

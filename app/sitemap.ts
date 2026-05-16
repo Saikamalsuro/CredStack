@@ -23,6 +23,7 @@ const STATIC_PATHS = [
 ]
 
 // Card changelog pages are appended dynamically below per active card.
+// /dashboard/* routes intentionally excluded from sitemap (auth-gated).
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
