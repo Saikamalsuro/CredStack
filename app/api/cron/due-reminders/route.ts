@@ -8,9 +8,15 @@ import { sendDueReminderEmail, getResend } from '@/lib/email/resend'
  * notification + email (when Resend wired). Idempotent per user per day.
  */
 export async function GET(request: Request) {
-  // Vercel Cron sends an Authorization header with CRON_SECRET.
-  const authHeader = request.headers.get('authorization')
-  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  // Vercel Cron sends Authorization: Bearer <CRON_SECRET>.
+  // Refuse to run if the secret is unset in production — open endpoint is worse than a missed run.
+  const cronSecret = process.env.CRON_SECRET
+  if (!cronSecret) {
+    if (process.env.NODE_ENV === 'production') {
+      return NextResponse.json({ error: 'CRON_SECRET not configured' }, { status: 503 })
+    }
+    // dev only: allow without secret
+  } else if (request.headers.get('authorization') !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

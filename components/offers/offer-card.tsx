@@ -1,3 +1,6 @@
+"use client"
+
+import { useEffect, useState } from 'react'
 import { ExternalLink, Calendar, ShieldCheck, Zap } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -23,19 +26,16 @@ function formatDate(iso: string | null): string {
 
 const FLASH_WINDOW_MS = 48 * 60 * 60 * 1000
 
-function isFlash(endsAt: string | null): boolean {
-  if (!endsAt) return false
-  const ms = new Date(endsAt).getTime() - Date.now()
-  return ms > 0 && ms <= FLASH_WINDOW_MS
-}
-
-function formatCountdown(endsAt: string): string {
-  const ms = new Date(endsAt).getTime() - Date.now()
-  if (ms <= 0) return 'Ending now'
+function computeFlashState(endsAt: string | null, now: number): { flash: boolean; countdown: string | null } {
+  if (!endsAt) return { flash: false, countdown: null }
+  const ms = new Date(endsAt).getTime() - now
+  const flash = ms > 0 && ms <= FLASH_WINDOW_MS
+  if (!flash) return { flash: false, countdown: null }
+  if (ms <= 0) return { flash, countdown: 'Ending now' }
   const hours = Math.floor(ms / 3600000)
-  if (hours >= 24) return `${Math.floor(hours / 24)}d ${hours % 24}h left`
+  if (hours >= 24) return { flash, countdown: `${Math.floor(hours / 24)}d ${hours % 24}h left` }
   const minutes = Math.floor((ms % 3600000) / 60000)
-  return `${hours}h ${minutes}m left`
+  return { flash, countdown: `${hours}h ${minutes}m left` }
 }
 
 function confidenceColor(band: Offer['confidenceBand']): string {
@@ -52,15 +52,23 @@ function confidenceColor(band: Offer['confidenceBand']): string {
 }
 
 export function OfferCard({ offer }: { offer: Offer }) {
-  const flash = isFlash(offer.endsAt)
+  const [{ flash, countdown }, setState] = useState<{ flash: boolean; countdown: string | null }>(
+    { flash: false, countdown: null }
+  )
+  useEffect(() => {
+    const tick = () => setState(computeFlashState(offer.endsAt, Date.now()))
+    tick()
+    const id = setInterval(tick, 60000)
+    return () => clearInterval(id)
+  }, [offer.endsAt])
   return (
     <Card className={`flex h-full flex-col ${flash ? 'border-amber-500/50 bg-amber-500/5' : ''}`}>
       <CardHeader className="space-y-2 pb-3">
         <div className="flex flex-wrap items-center gap-1.5">
-          {flash && offer.endsAt && (
+          {flash && countdown && (
             <Badge className="text-[10px] uppercase tracking-wide bg-amber-500/15 text-amber-700 border-amber-500/40 dark:text-amber-300">
               <Zap className="h-3 w-3 mr-1" />
-              Flash · {formatCountdown(offer.endsAt)}
+              Flash · {countdown}
             </Badge>
           )}
           <Badge variant="outline" className="text-[10px] uppercase tracking-wide">

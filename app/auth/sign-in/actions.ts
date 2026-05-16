@@ -4,13 +4,14 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
 import { createServerClient } from '@/lib/db/server'
+import { safeRedirectPath } from '@/lib/auth/safe-redirect'
 
 export async function login(formData: FormData) {
   const supabase = await createServerClient()
 
   const email = formData.get('email') as string
   const password = formData.get('password') as string
-  const redirectTo = (formData.get('redirect') as string) || '/'
+  const redirectTo = safeRedirectPath(formData.get('redirect'))
 
   const { error } = await supabase.auth.signInWithPassword({ email, password })
 
@@ -26,7 +27,7 @@ export async function loginWithGoogle(formData: FormData) {
   const supabase = await createServerClient()
   const headerList = await headers()
   const origin = headerList.get('origin') ?? headerList.get('host')
-  const redirectTo = (formData.get('redirect') as string) || '/'
+  const redirectTo = safeRedirectPath(formData.get('redirect'))
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',

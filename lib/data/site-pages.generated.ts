@@ -19,9 +19,9 @@ export const SITE_PAGES: SitePage[] = [
   },
   {
     "href": "/advisor",
-    "title": "Advisor",
-    "description": "",
-    "keywords": "advisor   advisor",
+    "title": "AI Advisor",
+    "description": "Tell us how you spend; the AI Advisor picks the card that earns you the most.",
+    "keywords": "ai advisor tell us how you spend; the ai advisor picks the card that earns you the most.  advisor",
     "group": "AI tools"
   },
   {
@@ -54,9 +54,9 @@ export const SITE_PAGES: SitePage[] = [
   },
   {
     "href": "/cards",
-    "title": "Cards",
-    "description": "",
-    "keywords": "cards   cards",
+    "title": "Browse credit cards",
+    "description": "Filter and sort 80+ Indian credit cards by rewards, fees, lounge access, and category.",
+    "keywords": "browse credit cards filter and sort 80+ indian credit cards by rewards, fees, lounge access, and category.  cards",
     "group": "Cards"
   },
   {
@@ -68,9 +68,9 @@ export const SITE_PAGES: SitePage[] = [
   },
   {
     "href": "/compare",
-    "title": "Compare",
-    "description": "",
-    "keywords": "compare   compare",
+    "title": "Compare credit cards side",
+    "description": "Compare any two Indian credit cards on rewards, fees, lounge access, and net annual value.",
+    "keywords": "compare credit cards side compare any two indian credit cards on rewards, fees, lounge access, and net annual value.  compare",
     "group": "Cards"
   },
   {
@@ -166,9 +166,9 @@ export const SITE_PAGES: SitePage[] = [
   },
   {
     "href": "/page.tsx",
-    "title": "Page.tsx",
-    "description": "",
-    "keywords": "page.tsx   page.tsx",
+    "title": "CredStack",
+    "description": "Compare 80+ Indian credit cards, analyse your spending with AI, and find the card that earns you the most. Free, independent, and built for India.",
+    "keywords": "credstack compare 80+ indian credit cards, analyse your spending with ai, and find the card that earns you the most. free, independent, and built for india.  page.tsx",
     "group": "Pages"
   },
   {

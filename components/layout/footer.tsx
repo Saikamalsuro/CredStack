@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { CreditCard, Github, Twitter, Linkedin, Mail } from "lucide-react"
+import { CreditCard, Github, Mail } from "lucide-react"
 import { motion } from "framer-motion"
 
 const footerLinks = {
@@ -34,10 +34,8 @@ const footerLinks = {
 }
 
 const socialLinks = [
-  { name: "Twitter", href: "#", icon: Twitter },
-  { name: "GitHub", href: "#", icon: Github },
-  { name: "LinkedIn", href: "#", icon: Linkedin },
-  { name: "Email", href: "mailto:hello@credstack.com", icon: Mail },
+  { name: "GitHub", href: "https://github.com/Saikamalsuro/CredStack", icon: Github, external: true },
+  { name: "Email", href: "mailto:hello@credstack.com", icon: Mail, external: false },
 ]
 
 export function Footer() {
@@ -70,16 +68,29 @@ export function Footer() {
               Your intelligent credit card companion. Compare, analyze, and optimize your card usage with AI-powered insights.
             </p>
             <div className="flex gap-4">
-              {socialLinks.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                  aria-label={item.name}
-                >
-                  <item.icon className="h-5 w-5" />
-                </Link>
-              ))}
+              {socialLinks.map((item) =>
+                item.external ? (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                    aria-label={item.name}
+                  >
+                    <item.icon className="h-5 w-5" aria-hidden="true" />
+                  </a>
+                ) : (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                    aria-label={item.name}
+                  >
+                    <item.icon className="h-5 w-5" aria-hidden="true" />
+                  </Link>
+                )
+              )}
             </div>
           </motion.div>
 
