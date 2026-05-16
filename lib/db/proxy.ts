@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import type { Database } from './types'
 
-const PUBLIC_PREFIXES = ['/auth/', '/api/auth/', '/api/inngest']
+const PUBLIC_PREFIXES = ['/auth/', '/api/auth/', '/api/inngest', '/api/cron/']
 const PUBLIC_EXACT = ['/sitemap.xml', '/robots.txt']
 const AUTH_ROUTES = ['/auth/sign-in', '/auth/sign-up']
 
