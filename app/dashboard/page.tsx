@@ -8,6 +8,7 @@ import {
   getCategoryShare,
 } from "@/lib/db/transactions"
 import { getUpcomingPayments } from "@/lib/db/card-payments"
+import { getRecentChangesForCards } from "@/lib/db/card-changelog"
 import { DashboardClient } from "./dashboard-client"
 
 function formatRelativeDate(iso: string): string {
@@ -37,6 +38,9 @@ export default async function DashboardPage() {
     getCategoryShare(user.id, 30),
     getUpcomingPayments(user.id),
   ])
+
+  const userSlugs = userCardRows.map((u) => u.cardSlug)
+  const recentChanges = await getRecentChangesForCards(userSlugs, 3)
 
   // Phase 2 fallback: if user has no real cards, show top 3 catalog cards as preview
   // so the dashboard isn't blank for first-time users.
@@ -70,6 +74,7 @@ export default async function DashboardPage() {
       categorySpending={category}
       recentTransactions={recentTransactions}
       upcomingPayments={upcomingPayments}
+      recentChanges={recentChanges}
       totals={{
         totalSpending,
         totalRewards,

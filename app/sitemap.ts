@@ -22,6 +22,8 @@ const STATIC_PATHS = [
   { path: "/learn/first-credit-card", priority: 0.7, changeFrequency: "monthly" as const },
 ]
 
+// Card changelog pages are appended dynamically below per active card.
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
   const now = new Date()
@@ -36,12 +38,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let cardEntries: MetadataRoute.Sitemap = []
   try {
     const cards = await getCards()
-    cardEntries = cards.map((c) => ({
-      url: `${base}/cards/${c.id}`,
-      lastModified: now,
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    }))
+    cardEntries = cards.flatMap((c) => [
+      {
+        url: `${base}/cards/${c.id}`,
+        lastModified: now,
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      },
+      {
+        url: `${base}/cards/${c.id}/changes`,
+        lastModified: now,
+        changeFrequency: "weekly" as const,
+        priority: 0.4,
+      },
+    ])
   } catch {
     // If DB is unreachable at build time, sitemap still serves the static paths.
   }
