@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Mail, Download } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Press — CredStack",
+  title: "Press",
   description: "Press kit, fact sheet, and media contact for CredStack.",
 }
 

@@ -4,7 +4,7 @@ import { getCards } from "@/lib/db/cards"
 import { CardsClient } from "./cards-client"
 
 export const metadata: Metadata = {
-  title: "Browse credit cards — CredStack",
+  title: "Browse credit cards",
   description: "Filter and sort 80+ Indian credit cards by rewards, fees, lounge access, and category.",
 }
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { StaticPageShell } from "@/components/layout/static-page-shell"
 
 export const metadata: Metadata = {
-  title: "FAQ — CredStack",
+  title: "FAQ",
   description: "Frequently asked questions about CredStack.",
 }
 

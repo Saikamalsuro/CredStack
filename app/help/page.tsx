@@ -4,7 +4,7 @@ import { StaticPageShell } from "@/components/layout/static-page-shell"
 import { BookOpen, BarChart3, Sparkles, ShieldCheck, MessageSquare, FileText } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Help Center — CredStack",
+  title: "Help Center",
   description: "Guides and articles for getting the most out of CredStack.",
 }
 

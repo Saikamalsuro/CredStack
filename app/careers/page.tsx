@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Briefcase } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Careers — CredStack",
+  title: "Careers",
   description: "Work on CredStack.",
 }
 

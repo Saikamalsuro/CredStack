@@ -9,7 +9,8 @@ import { getCards, getFeaturedCards, getPopularCards } from "@/lib/db/cards"
 import { createPublicClient } from "@/lib/db/public-client"
 
 export const metadata: Metadata = {
-  title: "CredStack — Smart Indian Credit Card Comparison",
+  // Use absolute so the root layout's title template doesn't append " · CredStack" twice.
+  title: { absolute: "CredStack — Smart Indian Credit Card Comparison" },
   description:
     "Compare 80+ Indian credit cards, analyse your spending with AI, and find the card that earns you the most. Free, independent, and built for India.",
 }

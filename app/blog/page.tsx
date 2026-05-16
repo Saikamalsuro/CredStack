@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { BookOpen } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Blog — CredStack",
+  title: "Blog",
   description: "Long-form writing on Indian credit cards, rewards strategy, and product updates.",
 }
 

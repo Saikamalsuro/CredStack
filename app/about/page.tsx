@@ -4,7 +4,7 @@ import { StaticPageShell } from "@/components/layout/static-page-shell"
 import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
-  title: "About — CredStack",
+  title: "About",
   description: "What CredStack is, why it exists, and who builds it.",
 }
 

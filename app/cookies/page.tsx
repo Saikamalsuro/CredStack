@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { StaticPageShell } from "@/components/layout/static-page-shell"
 
 export const metadata: Metadata = {
-  title: "Cookie Policy — CredStack",
+  title: "Cookie Policy",
   description: "How CredStack uses cookies and similar technologies.",
 }
 
