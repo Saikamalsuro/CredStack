@@ -5,8 +5,23 @@ import { sendDueReminderEmail, getResend } from '@/lib/email/resend'
 /**
  * Daily cron — fires at 9 AM IST via Vercel Cron (see vercel.json).
  * Iterates all users with payments due in next 14 days, sends in-app
- * notification + email (when Resend wired). Idempotent per user per day.
+ * notification + email (when Resend wired). Single Vercel cron firing per day
+ * is the primary safeguard against duplicate emails; a future migration will
+ * add `card_payments.last_reminded_on` so re-runs (manual / retried) become
+ * cheap no-ops.
  */
+const IST_OFFSET_MINUTES = 5 * 60 + 30
+
+function nowInIst(): Date {
+  const now = new Date()
+  const utc = now.getTime() + now.getTimezoneOffset() * 60_000
+  return new Date(utc + IST_OFFSET_MINUTES * 60_000)
+}
+
+function istDateString(d: Date): string {
+  // YYYY-MM-DD in IST. Used for `due_date` filtering and idempotency stamping.
+  return d.toISOString().slice(0, 10)
+}
 export async function GET(request: Request) {
   // Vercel Cron sends Authorization: Bearer <CRON_SECRET>.
   // Refuse to run if the secret is unset in production — open endpoint is worse than a missed run.
@@ -21,10 +36,11 @@ export async function GET(request: Request) {
   }
 
   const supabase = createAdminClient()
-  const horizonDate = new Date()
+  const ist = nowInIst()
+  const today = istDateString(ist)
+  const horizonDate = new Date(ist)
   horizonDate.setDate(horizonDate.getDate() + 14)
-  const today = new Date().toISOString().slice(0, 10)
-  const horizon = horizonDate.toISOString().slice(0, 10)
+  const horizon = istDateString(horizonDate)
 
   const { data: payments, error } = await supabase
     .from('card_payments')
@@ -41,11 +57,15 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
+  const todayMs = new Date(`${today}T00:00:00Z`).getTime()
   const reminders = (payments ?? []).map((p) => {
     const card = (p.user_cards as unknown as { cards: { name: string } }).cards
     const profile = p.profiles as unknown as { email: string | null; full_name: string | null }
-    const days = Math.ceil((new Date(p.due_date).getTime() - Date.now()) / (24 * 60 * 60 * 1000))
+    const days = Math.ceil(
+      (new Date(`${p.due_date}T00:00:00Z`).getTime() - todayMs) / (24 * 60 * 60 * 1000)
+    )
     return {
+      paymentId: p.id,
       userId: p.user_id,
       email: profile?.email,
       fullName: profile?.full_name,

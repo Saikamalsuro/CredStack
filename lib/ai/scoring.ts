@@ -23,37 +23,43 @@ export function computeNetAnnualValue(
   card: CardExtended,
   profile: SpendingProfile
 ): NetValueBreakdown {
+  // Clamp the category split — if the four user-set pcts already exceed 100,
+  // 'other' should be 0, not a negative spend.
+  const allocated = profile.shopping + profile.travel + profile.fuel + profile.dining
+  const otherPct = Math.max(0, 100 - allocated)
+
   const monthlySpendByCategory: Record<string, number> = {
     shopping_online: profile.monthlySpend * (profile.shopping / 100),
     travel: profile.monthlySpend * (profile.travel / 100),
     fuel: profile.monthlySpend * (profile.fuel / 100),
     dining: profile.monthlySpend * (profile.dining / 100),
-    other:
-      profile.monthlySpend *
-      ((100 - profile.shopping - profile.travel - profile.fuel - profile.dining) / 100),
+    other: profile.monthlySpend * (otherPct / 100),
   }
 
-  let monthlyReward = 0
+  // Accumulate rewards in paise (integer) to avoid float drift across many cards.
+  let monthlyRewardPaise = 0
   for (const [cat, amount] of Object.entries(monthlySpendByCategory)) {
     const catKey = cat as RewardCategoryKey
     if (card.exclusions.includes(catKey)) continue
     const rule = card.rewardRules.find((r) => r.category === catKey)
     const ratePct = rule?.ratePct ?? card.baseRewardRate
     const cap = rule?.monthlyCap ?? Infinity
-    const earned = Math.min(amount * (ratePct / 100), cap)
-    monthlyReward += earned
+    // (rupees * 100 paise) * (rate * 100 basis) / 10_000 = paise of reward
+    const earnedPaise = Math.round(amount * 100 * (ratePct * 100) / 10_000)
+    const cappedPaise = Math.min(earnedPaise, Math.round(cap * 100))
+    monthlyRewardPaise += cappedPaise
   }
 
   if (card.rewardCappingMonthly) {
-    monthlyReward = Math.min(monthlyReward, card.rewardCappingMonthly)
+    monthlyRewardPaise = Math.min(monthlyRewardPaise, Math.round(card.rewardCappingMonthly * 100))
   }
 
-  let annualReward = monthlyReward * 12
+  let annualRewardPaise = monthlyRewardPaise * 12
 
   const annualSpend = profile.monthlySpend * 12
   for (const ms of card.milestones) {
     if (annualSpend >= ms.spendThreshold) {
-      annualReward += ms.rewardValue
+      annualRewardPaise += Math.round(ms.rewardValue * 100)
     }
   }
 
@@ -61,10 +67,11 @@ export function computeNetAnnualValue(
   const fee =
     card.annualFeeWaiverSpend && annualSpend >= card.annualFeeWaiverSpend ? 0 : baseFee
 
+  const annualRewardRupees = Math.round(annualRewardPaise / 100)
   return {
-    expectedAnnualReward: Math.round(annualReward),
+    expectedAnnualReward: annualRewardRupees,
     fee,
-    netAnnualValue: Math.round(annualReward - fee),
+    netAnnualValue: annualRewardRupees - fee,
     monthlyByCategory: monthlySpendByCategory,
   }
 }

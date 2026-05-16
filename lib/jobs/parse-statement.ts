@@ -102,14 +102,22 @@ export const parseStatement = inngest.createFunction(
       classified.classifications.map((c) => [c.merchant, c])
     )
 
+    // Treat positive amounts as debits (spend) and negative amounts as
+    // refunds/credits. Net category spend = debits - refunds so a fully refunded
+    // category nets to zero. Both refunds and zero-value rows skip the spend
+    // total but refunds still reduce category buckets so analytics stay honest.
     let totalSpend = 0
     const categorySpend: Record<string, number> = {}
     for (const t of extracted.transactions) {
-      if (t.amount <= 0) continue
-      totalSpend += t.amount
+      if (t.amount === 0) continue
       const cls = merchantMap.get(t.merchant)
       const cat = cls?.category ?? 'other'
+      if (t.amount > 0) totalSpend += t.amount
       categorySpend[cat] = (categorySpend[cat] ?? 0) + t.amount
+    }
+    // Drop categories that net to ≤ 0 after refunds.
+    for (const k of Object.keys(categorySpend)) {
+      if (categorySpend[k] <= 0) delete categorySpend[k]
     }
 
     const totalSpendPaise = Math.round(totalSpend * 100)
