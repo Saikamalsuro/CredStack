@@ -916,6 +916,250 @@ export const ARTICLES: AcademyArticle[] = [
       { href: '/cards?category=premium', label: 'Premium cards in catalogue' },
     ],
   },
+  {
+    slug: 'card-upgrades-and-downgrades',
+    level: 'intermediate',
+    title: 'Card upgrades and downgrades — preserving credit age while changing perks',
+    excerpt:
+      'You can usually swap product variants within the same issuer without losing your account age. Knowing when to upgrade vs apply fresh saves CIBIL friction.',
+    readMinutes: 4,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'A product change keeps the same underlying account number (or transfers history). A new application creates a fresh account. Both can change which perks you get; only the new application produces a hard CIBIL enquiry.',
+      },
+      {
+        heading: 'When to upgrade in-place',
+        list: [
+          'You qualify for the higher variant on income / spend criteria.',
+          'You want the perks without a CIBIL hit.',
+          'Your card is at least 12 months old (most issuers gate product changes by tenure).',
+          'You are willing to forfeit the welcome bonus on the upgraded variant (most banks don\'t pay it on product change).',
+        ],
+      },
+      {
+        heading: 'When to apply fresh',
+        body:
+          'A new application is worth it when:',
+        list: [
+          'Welcome bonus is large (>₹10K equivalent).',
+          'Hard CIBIL enquiry won\'t hurt — your score is solid, no other recent applications.',
+          'The new variant is on a different network (Visa → Amex) and you genuinely need both.',
+        ],
+      },
+      {
+        heading: 'Downgrade strategies',
+        body:
+          'Closing a premium card outright is the worst option — credit age drops, total limit drops, utilisation spikes. Better:',
+        list: [
+          'Downgrade to LTF variant within the same issuer (HDFC Infinia → Regalia → Millennia).',
+          'Keep the LTF variant active with one small monthly transaction. Preserves credit age forever.',
+          'Negotiate fee waiver instead of downgrading. See premium retention article.',
+        ],
+      },
+      {
+        heading: 'Issuer-by-issuer downgrade paths',
+        list: [
+          'HDFC: Infinia → Diners Privilege → Regalia → MoneyBack+. All possible via NetBanking request.',
+          'Amex: Plat Reserve → Plat Travel → Gold → SmartEarn. Phone call to retention team.',
+          'Axis: Magnus → Privilege → MyZone. Branch or app request.',
+          'ICICI: Emeralde Private → Emeralde → Sapphiro → Coral. Email customer service.',
+          'SBI: ELITE → PRIME → SimplyCLICK / SimplySAVE. Phone call.',
+        ],
+      },
+    ],
+    relatedLinks: [
+      { href: '/learn/premium-card-retention', label: 'Retention conversation' },
+      { href: '/learn/utilization-and-credit-score', label: 'Why credit age matters' },
+      { href: '/dashboard/cards', label: 'Your portfolio' },
+    ],
+  },
+  {
+    slug: 'co-branded-cards',
+    level: 'intermediate',
+    title: 'Co-branded cards — who they\'re for, who they\'re not',
+    excerpt:
+      'A Tata Neu HDFC, Swiggy HDFC, or Flipkart Axis pays 5-10× rewards inside its ecosystem and 1× outside. Worth it if your spend matches; trap if it doesn\'t.',
+    readMinutes: 4,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'Co-branded cards are partnerships between a bank and a non-bank brand. The card carries both logos. Earn rates inside the partner\'s ecosystem are dramatically higher; outside, they look like an entry-level card.',
+      },
+      {
+        heading: 'When co-brands win',
+        body:
+          'Math is simple: (ecosystem spend × bonus rate) - (lost rewards on non-bonus spend) - annual fee > 0.',
+        list: [
+          'Swiggy HDFC at 10% on Swiggy: break-even at ₹50K Swiggy spend/year for ₹500 fee.',
+          'Amazon Pay ICICI at 5% on Amazon (Prime): break-even at ₹10K Amazon spend/year (LTF).',
+          'Flipkart Axis at 5% on Flipkart: break-even at ₹10K Flipkart spend/year for ₹500 fee.',
+          'Tata Neu Infinity HDFC at 5% Tata Neu app: break-even at ₹30K Tata ecosystem spend/year for ₹1,499 fee.',
+          'IRCTC HDFC at 5% on train bookings: break-even at ₹10K train spend/year.',
+        ],
+      },
+      {
+        heading: 'When co-brands lose',
+        list: [
+          'You buy from 5+ different platforms — diversified spend earns base rate everywhere.',
+          'Ecosystem changes loyalty terms (Vistara merged into Air India, MMT ICICI stopped new applications).',
+          'Co-brand currency has no resale outside ecosystem (NeuCoins, 6E Rewards lock you in).',
+          'Issuer devalues earn rate mid-cycle without warning (common with ICICI co-brands).',
+        ],
+      },
+      {
+        heading: 'The 2-card test',
+        body:
+          'A co-brand is worth holding if it earns more on its category than your generic premium card would. Run the math:',
+        list: [
+          '5% Swiggy cashback on ₹3K/month = ₹150/month.',
+          'HDFC Infinia at 3.3% RP value on same ₹3K/month = ₹100/month.',
+          'Differential = ₹50/month = ₹600/year. Worth Swiggy HDFC\'s ₹500 fee, marginally.',
+          'If Swiggy spend was only ₹1.5K/month, differential = ₹300/year, less than fee. Skip.',
+        ],
+      },
+      {
+        heading: 'Co-brand portfolio cap',
+        body:
+          'Most users don\'t need more than 2 co-brands. Pick the one ecosystem you spend most in, plus one alternative for the runner-up. Past that, mental overhead dominates.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/learn/optimising-across-multiple-cards', label: 'Optimising across multiple cards' },
+      { href: '/cards', label: 'Browse co-brand cards' },
+      { href: '/learn/rewards', label: 'Reward programmes by issuer' },
+    ],
+  },
+  {
+    slug: 'reward-redemption-strategy',
+    level: 'intermediate',
+    title: 'Reward redemption strategy — never accept the first option',
+    excerpt:
+      'Same 50,000 points worth ₹12K as statement credit, ₹25K as voucher, ₹50K+ as airline transfer. The redemption you choose decides 80% of your card\'s value.',
+    readMinutes: 5,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'The earn-rate marketed on a card is theoretical. The redemption-rate you actually capture is real. Banks design redemption ladders so the easy options (statement credit, catalogue products) pay the worst.',
+      },
+      {
+        heading: 'The redemption ladder',
+        body: 'Almost every Indian reward programme follows this hierarchy of value:',
+        list: [
+          '1. Airline / hotel transfer (1:1+) — usually 2-4× statement credit.',
+          '2. Merchant-portal flights (SmartBuy, ICICI Mall) — 1:1 face value.',
+          '3. Voucher catalogue (Flipkart, Amazon, BMS) — 1.5-2× statement credit.',
+          '4. Product catalogue (TVs, watches) — banks mark up products 30-50%.',
+          '5. Statement credit — the floor value.',
+        ],
+      },
+      {
+        heading: 'When to redeem early',
+        body:
+          'Reward currencies decay. Common triggers to redeem now:',
+        list: [
+          'Programme announces devaluation effective in <6 months (e.g. ICICI Jan 2026 cuts).',
+          'You have 80%+ of an expiring batch with no obvious use case (don\'t hoard for "someday").',
+          'Annual milestone vouchers (Amex Platinum Travel) — use within 6 months of issuance or they expire.',
+        ],
+      },
+      {
+        heading: 'When to hoard',
+        body:
+          'Saving for a specific redemption is worth it only when:',
+        list: [
+          'Target redemption is 6-12 months away.',
+          'Transfer partner has a sweet spot (Marriott category 1-3 hotels, KrisFlyer business class).',
+          'Programme is stable (Amex MR hasn\'t devalued in 5+ years).',
+          'You have visible runway — leaving cards inactive while hoarding hurts utilisation.',
+        ],
+      },
+      {
+        heading: 'Tooling',
+        body:
+          'CredStack\'s Points Converter at /tools/points-converter compares your balance against every redemption type for any card. Use it before clicking the "Redeem" button — the highlighted option is usually NOT the one your bank promotes by default.',
+      },
+      {
+        heading: 'Common mistakes',
+        list: [
+          'Redeeming HDFC RPs at ₹0.30 statement credit when SmartBuy flights pay ₹1.',
+          'Picking the catalogue iPhone — banks mark up by 25-40%, so it\'s a worse purchase than retail.',
+          'Letting Amex Travel Vouchers expire — they\'re 1:1 cash on partner sites.',
+          'Transferring to airlines for short-haul economy redemptions — the maths almost never beats voucher route.',
+        ],
+      },
+    ],
+    relatedLinks: [
+      { href: '/tools/points-converter', label: 'Points value calculator' },
+      { href: '/learn/rewards', label: 'All reward programmes' },
+      { href: '/learn/travel-hacking-with-indian-cards', label: 'Travel hacking playbook' },
+    ],
+  },
+  {
+    slug: 'manufactured-spending-india',
+    level: 'advanced',
+    title: 'Manufactured spending in India — the honest risk-vs-reward picture',
+    excerpt:
+      'Manufactured spending is the practice of generating credit card spend on near-zero-cost transactions to hit thresholds. In India it is technically possible. Mostly inadvisable. Read why.',
+    readMinutes: 5,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'Manufactured spending (MS) is the practice of routing money through credit card → semi-liquid asset → bank account to generate card spend without genuine consumption. Popular in the US travel hacking community. In India, the playbook is narrower and the risks are higher.',
+      },
+      {
+        heading: 'Disclaimer (read first)',
+        body:
+          'MS sits in a grey zone. Banks have started clamping down in 2024-2026 — Citi, Amex, HDFC have all closed accounts of users flagged for high-volume MS. RBI has signalled scrutiny of rent-payment and wallet-load patterns. This article is informational, not encouragement.',
+      },
+      {
+        heading: 'Tactics that historically worked (and are now mostly closed)',
+        list: [
+          'Rent payments via CRED Pay / NoBroker Pay / Magicbricks Pay → bank account: 1% effective fee for landlord, but banks (HDFC, Axis, SBI) have either capped reward earning on these MCCs or disabled them entirely as of late 2025.',
+          'Wallet loads on Paytm / Amazon Pay → P2P / merchant cashout: ICICI capped at ₹5K/month from Feb 2026; other issuers similar.',
+          'Tax payments via PayU / CCAvenue with 0.5-1% fee → 1.5-2% earn = small arbitrage; viable only for high-volume tax filers.',
+          'Gift card purchase → cashout: Indian gift cards (Amazon, Flipkart, Tata CLiQ) don\'t resell at par, so net cost > reward.',
+        ],
+      },
+      {
+        heading: 'Why it stopped working',
+        list: [
+          'RBI wallet load surcharge guidance (2025-2026) gave banks cover to charge 1% fee.',
+          'Banks have transaction-pattern detection — sudden ₹2-5L wallet loads trigger account review.',
+          'Gaming MCC fees (ICICI 2%, HDFC 2.5%) destroyed the gaming-ramp playbook.',
+          'Most rent-payment platforms now report TDS to IT department, eliminating the "easy" loophole.',
+        ],
+      },
+      {
+        heading: 'The cost-benefit math',
+        body:
+          'For ₹1L/month MS volume at 1% net fee + 2-3% reward = ₹1-2K monthly net gain. Account-closure risk = full loss of the card + welcome bonus claw-back + potential CIBIL flag. Risk-adjusted return is negative for most.',
+      },
+      {
+        heading: 'Legal alternatives that work',
+        list: [
+          'Pay legitimate large expenses on card (insurance premiums, school fees, hospital bills if accepted). These hit category bonuses and waiver thresholds without MS.',
+          'Bunch annual subscriptions onto the card month one of cycle (insurance, software, gym).',
+          'Use the card for genuine business expense reimbursed by employer — clean, no MS needed.',
+          'Family member spend routed through your card (with their consent) for shared expenses — legitimate household pattern.',
+        ],
+      },
+      {
+        heading: 'Bottom line',
+        body:
+          'Manufactured spending in India 2026 is a shrinking game with rising downside. The hours you spend chasing MS arbitrage are better invested in optimising legitimate spend across cards (see optimising-across-multiple-cards article). MS is for users who already have ₹50L+ annual spend and treat it as hobby, not income.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/learn/optimising-across-multiple-cards', label: 'Optimising legitimate spend' },
+      { href: '/safety/rbi-updates', label: 'RBI rules that changed the game' },
+      { href: '/learn/optimal-portfolio-high-spend', label: 'High-spender portfolio' },
+    ],
+  },
 ]
 
 export function getArticle(slug: string): AcademyArticle | undefined {
