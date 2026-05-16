@@ -24,6 +24,7 @@ import {
   Smartphone,
   Landmark,
   GraduationCap,
+  Plane,
 } from "lucide-react"
 import {
   Sheet,
@@ -48,6 +49,7 @@ const PRIMARY: SidebarLink[] = [
   { href: "/cards", name: "Cards", icon: CreditCard },
   { href: "/dashboard", name: "Dashboard", icon: LayoutDashboard, description: "Sign in required" },
   { href: "/dashboard/cards", name: "My Cards", icon: CreditCard, description: "Cards in your portfolio" },
+  { href: "/dashboard/lounges", name: "Lounge Tracker", icon: Plane, description: "Visits vs annual quota" },
   { href: "/dashboard/tax-export", name: "Tax Export", icon: FileText, description: "Annual ITR summary" },
 ]
 

@@ -1059,6 +1059,57 @@ export type Database = {
           },
         ]
       }
+      user_lounge_visits: {
+        Row: {
+          created_at: string
+          guest_count: number | null
+          id: string
+          lounge_name: string
+          notes: string | null
+          user_card_id: string
+          user_id: string
+          visit_date: string
+          visit_type: string
+        }
+        Insert: {
+          created_at?: string
+          guest_count?: number | null
+          id?: string
+          lounge_name: string
+          notes?: string | null
+          user_card_id: string
+          user_id: string
+          visit_date: string
+          visit_type: string
+        }
+        Update: {
+          created_at?: string
+          guest_count?: number | null
+          id?: string
+          lounge_name?: string
+          notes?: string | null
+          user_card_id?: string
+          user_id?: string
+          visit_date?: string
+          visit_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_lounge_visits_user_card_id_fkey"
+            columns: ["user_card_id"]
+            isOneToOne: false
+            referencedRelation: "user_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_lounge_visits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

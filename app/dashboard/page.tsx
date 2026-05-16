@@ -9,6 +9,7 @@ import {
 } from "@/lib/db/transactions"
 import { getUpcomingPayments } from "@/lib/db/card-payments"
 import { getRecentChangesForCards } from "@/lib/db/card-changelog"
+import { getLoungeVisits } from "@/lib/db/lounge-visits"
 import { DashboardClient } from "./dashboard-client"
 
 function formatRelativeDate(iso: string): string {
@@ -41,6 +42,11 @@ export default async function DashboardPage() {
 
   const userSlugs = userCardRows.map((u) => u.cardSlug)
   const recentChanges = await getRecentChangesForCards(userSlugs, 3)
+
+  const yearStart = `${new Date().getFullYear()}-01-01`
+  const loungeVisitsThisYear = (await getLoungeVisits(user.id, 200)).filter(
+    (v) => v.visitDate >= yearStart
+  ).length
 
   // Phase 2 fallback: if user has no real cards, show top 3 catalog cards as preview
   // so the dashboard isn't blank for first-time users.
@@ -79,7 +85,7 @@ export default async function DashboardPage() {
         totalSpending,
         totalRewards,
         activeCards: userCardRows.length,
-        loungeVisits: 0,
+        loungeVisits: loungeVisitsThisYear,
       }}
     />
   )
