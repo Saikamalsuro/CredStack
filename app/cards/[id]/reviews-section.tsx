@@ -86,6 +86,11 @@ export function ReviewsSection({
                   )}
                 </header>
                 {e.useCase && <Badge variant="outline" className="text-xs">{e.useCase}</Badge>}
+                {e.shortSummary && (
+                  <p className="text-sm font-medium text-foreground/90 border-l-2 border-primary pl-3 italic">
+                    {e.shortSummary}
+                  </p>
+                )}
                 <p className="text-sm whitespace-pre-line">{e.body}</p>
                 {(e.pros.length > 0 || e.cons.length > 0) && (
                   <div className="grid sm:grid-cols-2 gap-3 text-sm pt-2">

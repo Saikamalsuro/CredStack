@@ -6,7 +6,7 @@ import { getNonCreditCardsByIssuer } from "@/lib/db/non-credit-cards"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Building2, CreditCard, Wallet, Coins, ArrowRight } from "lucide-react"
+import { Building2, CreditCard, Wallet, Coins, Globe, ArrowRight } from "lucide-react"
 
 interface Props {
   params: Promise<{ issuer: string }>
@@ -50,6 +50,7 @@ export default async function BankIssuerPage({ params }: Props) {
   const nonCredit = await getNonCreditCardsByIssuer(exactIssuer)
   const debit = nonCredit.filter((c) => c.cardType === "debit")
   const prepaid = nonCredit.filter((c) => c.cardType === "prepaid")
+  const forex = nonCredit.filter((c) => c.cardType === "forex")
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
@@ -103,6 +104,15 @@ export default async function BankIssuerPage({ params }: Props) {
         empty="Prepaid card data coming soon"
       >
         <NonCreditGrid cards={prepaid} />
+      </Section>
+
+      <Section
+        title="Forex / Travel cards"
+        icon={Globe}
+        count={forex.length}
+        empty="Forex card data coming soon"
+      >
+        <NonCreditGrid cards={forex} />
       </Section>
     </div>
   )
