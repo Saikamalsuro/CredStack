@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
+import { FileText, History, AlertCircle } from "lucide-react"
+import type { CardChangeRow } from "@/lib/db/card-changelog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -81,6 +83,7 @@ interface DashboardClientProps {
   categorySpending: DashboardCategoryShare[]
   recentTransactions: DashboardTransaction[]
   upcomingPayments: DashboardUpcomingPayment[]
+  recentChanges?: CardChangeRow[]
   totals: DashboardStatTotals
 }
 
@@ -90,6 +93,7 @@ export function DashboardClient({
   categorySpending,
   recentTransactions,
   upcomingPayments,
+  recentChanges = [],
   totals,
 }: DashboardClientProps) {
   const stats = [
@@ -362,7 +366,7 @@ export function DashboardClient({
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle>My Cards</CardTitle>
                   <Button variant="ghost" size="sm" asChild>
-                    <Link href="/cards">View All</Link>
+                    <Link href="/dashboard/cards">Manage</Link>
                   </Button>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -457,9 +461,59 @@ export function DashboardClient({
                       <span className="text-xs">Add Card</span>
                     </Link>
                   </Button>
+                  <Button variant="outline" className="h-auto py-4 flex flex-col gap-2" asChild>
+                    <Link href="/dashboard/tax-export">
+                      <FileText className="h-5 w-5" />
+                      <span className="text-xs">Tax Export</span>
+                    </Link>
+                  </Button>
+                  <Button variant="outline" className="h-auto py-4 flex flex-col gap-2" asChild>
+                    <Link href="/dashboard/cards">
+                      <CreditCard className="h-5 w-5" />
+                      <span className="text-xs">My Cards</span>
+                    </Link>
+                  </Button>
                 </CardContent>
               </Card>
             </motion.div>
+
+            {recentChanges.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+              >
+                <Card className="bg-amber-500/5 border-amber-500/30">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <AlertCircle className="h-4 w-4 text-amber-500" />
+                      Changes on your cards
+                    </CardTitle>
+                    <CardDescription>Recent issuer announcements affecting cards in your portfolio</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    {recentChanges.map((c, i) => (
+                      <Link
+                        key={`${c.cardSlug}-${c.date}-${i}`}
+                        href={`/cards/${c.cardSlug}/changes`}
+                        className="block p-3 rounded-md border hover:bg-muted/40 transition-colors"
+                      >
+                        <p className="font-medium text-foreground truncate">{c.summary}</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {c.cardName} • {new Date(c.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                        </p>
+                      </Link>
+                    ))}
+                    <Button asChild variant="ghost" size="sm" className="w-full">
+                      <Link href="/dashboard/cards">
+                        <History className="h-3 w-3 mr-2" />
+                        Manage portfolio
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
           </div>
         </div>
       </div>

@@ -47,6 +47,8 @@ const PRIMARY: SidebarLink[] = [
   { href: "/", name: "Home", icon: HomeIcon },
   { href: "/cards", name: "Cards", icon: CreditCard },
   { href: "/dashboard", name: "Dashboard", icon: LayoutDashboard, description: "Sign in required" },
+  { href: "/dashboard/cards", name: "My Cards", icon: CreditCard, description: "Cards in your portfolio" },
+  { href: "/dashboard/tax-export", name: "Tax Export", icon: FileText, description: "Annual ITR summary" },
 ]
 
 const TOOLS: SidebarLink[] = [

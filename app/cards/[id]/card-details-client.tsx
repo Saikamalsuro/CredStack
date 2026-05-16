@@ -16,7 +16,8 @@ import {
   Globe,
   AlertCircle,
   ExternalLink,
-  GitCompare
+  GitCompare,
+  History
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -243,6 +244,12 @@ export function CardDetailsClient({ card, similarCards, dataLastVerifiedAt, offe
                   <Link href={`/compare?cards=${card.id}`}>
                     <GitCompare className="h-4 w-4 mr-2" />
                     Add to Compare
+                  </Link>
+                </Button>
+                <Button variant="ghost" size="lg" asChild>
+                  <Link href={`/cards/${card.id}/changes`}>
+                    <History className="h-4 w-4 mr-2" />
+                    Change history
                   </Link>
                 </Button>
               </div>
