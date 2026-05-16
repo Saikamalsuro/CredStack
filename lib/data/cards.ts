@@ -10,6 +10,14 @@ export type CardCategory =
 
 export type CardNetwork = "visa" | "mastercard" | "amex" | "rupay" | "discover"
 
+export type CardTier =
+  | "entry"
+  | "lifestyle"
+  | "premium"
+  | "super_premium"
+  | "secured"
+  | "student"
+
 export interface CreditCard {
   id: string
   name: string
@@ -46,6 +54,7 @@ export interface CreditCard {
   cardColor: string
   featured: boolean
   popular: boolean
+  tier?: CardTier | null
 }
 
 export const creditCards: CreditCard[] = [
@@ -626,6 +635,7 @@ export function filterCards(
   filters: {
     categories?: CardCategory[]
     networks?: CardNetwork[]
+    tiers?: CardTier[]
     maxAnnualFee?: number
     hasLoungeAccess?: boolean
     noAnnualFee?: boolean
@@ -637,6 +647,9 @@ export function filterCards(
       return false
     }
     if (filters.networks?.length && !filters.networks.includes(card.network)) {
+      return false
+    }
+    if (filters.tiers?.length && (!card.tier || !filters.tiers.includes(card.tier))) {
       return false
     }
     if (filters.maxAnnualFee !== undefined && card.annualFee > filters.maxAnnualFee) {

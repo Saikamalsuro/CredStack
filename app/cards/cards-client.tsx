@@ -11,6 +11,7 @@ import {
   type CreditCard,
   type CardCategory,
   type CardNetwork,
+  type CardTier,
 } from "@/lib/data/cards"
 
 interface CardsClientProps {
@@ -26,6 +27,7 @@ export function CardsClient({ cards }: CardsClientProps) {
     initialCategory ? [initialCategory] : []
   )
   const [selectedNetworks, setSelectedNetworks] = useState<CardNetwork[]>([])
+  const [selectedTiers, setSelectedTiers] = useState<CardTier[]>([])
   const [maxAnnualFee, setMaxAnnualFee] = useState<number | null>(null)
   const [noAnnualFee, setNoAnnualFee] = useState(false)
   const [hasLoungeAccess, setHasLoungeAccess] = useState(false)
@@ -46,6 +48,7 @@ export function CardsClient({ cards }: CardsClientProps) {
     result = filterCards(result, {
       categories: selectedCategories.length > 0 ? selectedCategories : undefined,
       networks: selectedNetworks.length > 0 ? selectedNetworks : undefined,
+      tiers: selectedTiers.length > 0 ? selectedTiers : undefined,
       maxAnnualFee: maxAnnualFee ?? undefined,
       hasLoungeAccess: hasLoungeAccess || undefined,
       noAnnualFee: noAnnualFee || undefined,
@@ -53,7 +56,7 @@ export function CardsClient({ cards }: CardsClientProps) {
 
     result = sortCards(result, sortBy)
     return result
-  }, [cards, searchQuery, selectedCategories, selectedNetworks, maxAnnualFee, noAnnualFee, hasLoungeAccess, sortBy])
+  }, [cards, searchQuery, selectedCategories, selectedNetworks, selectedTiers, maxAnnualFee, noAnnualFee, hasLoungeAccess, sortBy])
 
   return (
     <div className="min-h-screen bg-background">
@@ -82,6 +85,8 @@ export function CardsClient({ cards }: CardsClientProps) {
             onCategoryChange={setSelectedCategories}
             selectedNetworks={selectedNetworks}
             onNetworkChange={setSelectedNetworks}
+            selectedTiers={selectedTiers}
+            onTierChange={setSelectedTiers}
             maxAnnualFee={maxAnnualFee}
             onMaxAnnualFeeChange={setMaxAnnualFee}
             noAnnualFee={noAnnualFee}
@@ -98,6 +103,8 @@ export function CardsClient({ cards }: CardsClientProps) {
               onCategoryChange={setSelectedCategories}
               selectedNetworks={selectedNetworks}
               onNetworkChange={setSelectedNetworks}
+              selectedTiers={selectedTiers}
+              onTierChange={setSelectedTiers}
               maxAnnualFee={maxAnnualFee}
               onMaxAnnualFeeChange={setMaxAnnualFee}
               noAnnualFee={noAnnualFee}
