@@ -40,7 +40,9 @@ export function OffersClient({ initialOffers, categories, merchants }: OffersCli
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
-    return initialOffers.filter((o) => {
+    const FLASH_WINDOW_MS = 48 * 60 * 60 * 1000
+    const now = Date.now()
+    const matched = initialOffers.filter((o) => {
       if (activeCategory !== 'all' && o.category !== activeCategory) return false
       if (activeMerchant && o.merchantSlug !== activeMerchant) return false
       if (!q) return true
@@ -48,6 +50,14 @@ export function OffersClient({ initialOffers, categories, merchants }: OffersCli
         .join(' ')
         .toLowerCase()
       return hay.includes(q)
+    })
+    // Flash offers (ending in <=48h) float to the top
+    return matched.slice().sort((a, b) => {
+      const aFlash = a.endsAt && new Date(a.endsAt).getTime() - now <= FLASH_WINDOW_MS && new Date(a.endsAt).getTime() > now
+      const bFlash = b.endsAt && new Date(b.endsAt).getTime() - now <= FLASH_WINDOW_MS && new Date(b.endsAt).getTime() > now
+      if (aFlash && !bFlash) return -1
+      if (!aFlash && bFlash) return 1
+      return 0
     })
   }, [initialOffers, activeCategory, activeMerchant, search])
 
