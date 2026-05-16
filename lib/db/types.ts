@@ -1062,6 +1062,78 @@ export type Database = {
           },
         ]
       }
+      non_credit_cards: {
+        Row: {
+          id: string
+          slug: string
+          name: string
+          issuer: string
+          card_type: Database["public"]["Enums"]["non_credit_card_type"]
+          network: Database["public"]["Enums"]["card_network"]
+          annual_fee: number
+          joining_fee: number
+          forex_markup_pct: number
+          atm_withdrawal_limit_daily: number | null
+          pos_limit_daily: number | null
+          key_features: string[]
+          linked_account_required: boolean
+          image_url: string | null
+          card_color_gradient: string
+          apply_url: string | null
+          data_pending: boolean
+          data_last_verified_at: string | null
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          slug: string
+          name: string
+          issuer: string
+          card_type: Database["public"]["Enums"]["non_credit_card_type"]
+          network: Database["public"]["Enums"]["card_network"]
+          annual_fee?: number
+          joining_fee?: number
+          forex_markup_pct?: number
+          atm_withdrawal_limit_daily?: number | null
+          pos_limit_daily?: number | null
+          key_features?: string[]
+          linked_account_required?: boolean
+          image_url?: string | null
+          card_color_gradient?: string
+          apply_url?: string | null
+          data_pending?: boolean
+          data_last_verified_at?: string | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          slug?: string
+          name?: string
+          issuer?: string
+          card_type?: Database["public"]["Enums"]["non_credit_card_type"]
+          network?: Database["public"]["Enums"]["card_network"]
+          annual_fee?: number
+          joining_fee?: number
+          forex_markup_pct?: number
+          atm_withdrawal_limit_daily?: number | null
+          pos_limit_daily?: number | null
+          key_features?: string[]
+          linked_account_required?: boolean
+          image_url?: string | null
+          card_color_gradient?: string
+          apply_url?: string | null
+          data_pending?: boolean
+          data_last_verified_at?: string | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       card_review_votes: {
         Row: { id: string; user_id: string; review_id: string; created_at: string }
         Insert: { id?: string; user_id: string; review_id: string; created_at?: string }
@@ -1303,6 +1375,7 @@ export type Database = {
         | "rejected"
         | "received"
       card_network: "visa" | "mastercard" | "amex" | "rupay" | "discover"
+      non_credit_card_type: "debit" | "prepaid"
       card_tier:
         | "entry"
         | "lifestyle"
