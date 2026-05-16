@@ -11,6 +11,11 @@ const STATIC_PATHS = [
   { path: "/eligibility", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/offers", priority: 0.6, changeFrequency: "daily" as const },
   { path: "/methodology", priority: 0.5, changeFrequency: "monthly" as const },
+  { path: "/tools/interest-calculator", priority: 0.7, changeFrequency: "monthly" as const },
+  { path: "/tools/emi-calculator", priority: 0.7, changeFrequency: "monthly" as const },
+  { path: "/apply/documents", priority: 0.6, changeFrequency: "monthly" as const },
+  { path: "/safety/helplines", priority: 0.6, changeFrequency: "monthly" as const },
+  { path: "/safety/fraud-guide", priority: 0.6, changeFrequency: "monthly" as const },
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
