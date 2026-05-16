@@ -12,6 +12,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
+import { SITE_PAGES, type SitePage } from "@/lib/data/site-pages.generated"
 
 interface CardLite {
   slug: string
@@ -20,17 +21,6 @@ interface CardLite {
   cardColor: string
   categories: string[]
 }
-
-const QUICK_LINKS = [
-  { label: "Browse all cards", href: "/cards" },
-  { label: "Compare cards", href: "/compare" },
-  { label: "AI advisor", href: "/advisor" },
-  { label: "Spend analyzer", href: "/analyzer" },
-  { label: "Optimizer", href: "/optimizer" },
-  { label: "Eligibility check", href: "/eligibility" },
-  { label: "Offers", href: "/offers" },
-  { label: "Methodology", href: "/methodology" },
-]
 
 export function SearchCommand() {
   const router = useRouter()
@@ -70,23 +60,51 @@ export function SearchCommand() {
     router.push(href)
   }
 
+  const pagesByGroup = React.useMemo(() => {
+    const map = new Map<string, SitePage[]>()
+    for (const p of SITE_PAGES) {
+      const arr = map.get(p.group) ?? []
+      arr.push(p)
+      map.set(p.group, arr)
+    }
+    const order = ["Home", "Cards", "AI tools", "Rewards", "Tools", "Apply", "Safety", "Learn", "About", "Support", "Company", "Legal", "Pages"]
+    return [...map.entries()].sort(
+      (a, b) => order.indexOf(a[0]) - order.indexOf(b[0])
+    )
+  }, [])
+
   return (
     <>
       <Button variant="ghost" size="icon" aria-label="Search" onClick={() => setOpen(true)}>
         <Search className="h-5 w-5" />
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search cards, pages..." />
+        <CommandInput placeholder="Search cards, pages, anything..." />
         <CommandList>
           <CommandEmpty>{loading ? "Loading..." : "No matches."}</CommandEmpty>
 
-          <CommandGroup heading="Quick links">
-            {QUICK_LINKS.map((q) => (
-              <CommandItem key={q.href} value={q.label} onSelect={() => go(q.href)}>
-                {q.label}
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          {pagesByGroup.map(([group, pages]) => (
+            <CommandGroup key={group} heading={group}>
+              {pages.map((p) => (
+                <CommandItem
+                  key={p.href}
+                  value={`${p.title} ${p.keywords}`}
+                  onSelect={() => go(p.href)}
+                >
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-medium truncate">{p.title}</span>
+                    {p.description ? (
+                      <span className="text-xs text-muted-foreground truncate">
+                        {p.description}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground truncate">{p.href}</span>
+                    )}
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          ))}
 
           {cards.length > 0 && (
             <CommandGroup heading="Cards">

@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS=--max-old-space-size=8192 next dev",
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 next build",
+    "site-index": "tsx scripts/generate-site-index.ts",
+    "dev": "tsx scripts/generate-site-index.ts && cross-env NODE_OPTIONS=--max-old-space-size=8192 next dev",
+    "build": "tsx scripts/generate-site-index.ts && cross-env NODE_OPTIONS=--max-old-space-size=8192 next build",
     "start": "next start",
     "lint": "eslint ."
   },
