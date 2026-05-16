@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, Poppins, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Providers } from '@/components/providers'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
@@ -75,7 +76,12 @@ export default async function RootLayout({
           </main>
           <Footer />
         </Providers>
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        {process.env.NODE_ENV === 'production' && (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        )}
       </body>
     </html>
   )
