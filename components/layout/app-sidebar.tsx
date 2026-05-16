@@ -85,6 +85,7 @@ const CALCULATORS: SidebarLink[] = [
 
 const LEARN: SidebarLink[] = [
   { href: "/learn/first-credit-card", name: "First Card Guide", icon: GraduationCap, description: "Beginner playbook" },
+  { href: "/learn/rewards", name: "Rewards Programmes", icon: Trophy, description: "How each currency works" },
 ]
 
 const SAFETY: SidebarLink[] = [

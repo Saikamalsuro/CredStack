@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next"
 import { getCards } from "@/lib/db/cards"
+import { REWARD_PROGRAMS } from "@/lib/data/reward-programs"
 
 const STATIC_PATHS = [
   { path: "/", priority: 1.0, changeFrequency: "weekly" as const },
@@ -20,6 +21,7 @@ const STATIC_PATHS = [
   { path: "/safety/rbi-updates", priority: 0.6, changeFrequency: "weekly" as const },
   { path: "/tools/points-converter", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/learn/first-credit-card", priority: 0.7, changeFrequency: "monthly" as const },
+  { path: "/learn/rewards", priority: 0.7, changeFrequency: "monthly" as const },
 ]
 
 // Card changelog pages are appended dynamically below per active card.
@@ -57,5 +59,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // If DB is unreachable at build time, sitemap still serves the static paths.
   }
 
-  return [...staticEntries, ...cardEntries]
+  const programEntries: MetadataRoute.Sitemap = REWARD_PROGRAMS.map((p) => ({
+    url: `${base}/learn/rewards/${p.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }))
+
+  return [...staticEntries, ...cardEntries, ...programEntries]
 }
