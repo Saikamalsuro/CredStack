@@ -1,39 +1,49 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { CreditCard, Users, TrendingUp, Award } from "lucide-react"
+import { CreditCard, Database, CalendarClock, BadgeCheck } from "lucide-react"
 
-const stats = [
-  {
-    icon: CreditCard,
-    value: "50+",
-    label: "Credit Cards",
-    description: "Comprehensive card database"
-  },
-  {
-    icon: Users,
-    value: "100K+",
-    label: "Active Users",
-    description: "Trust CredStack"
-  },
-  {
-    icon: TrendingUp,
-    value: "₹2.5Cr+",
-    label: "Rewards Saved",
-    description: "For our users"
-  },
-  {
-    icon: Award,
-    value: "4.9/5",
-    label: "User Rating",
-    description: "Based on reviews"
-  }
-]
+interface StatsSectionProps {
+  cardCount?: number
+  lastVerifiedAt?: string | null
+}
 
-export function StatsSection() {
+function formatVerifiedDate(iso?: string | null): string {
+  if (!iso) return "Updated regularly"
+  const d = new Date(iso)
+  return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
+}
+
+export function StatsSection({ cardCount = 83, lastVerifiedAt }: StatsSectionProps) {
+  const stats = [
+    {
+      icon: CreditCard,
+      value: `${cardCount}`,
+      label: "Cards tracked",
+      description: "Across 16 Indian issuers",
+    },
+    {
+      icon: Database,
+      value: "35+",
+      label: "Data fields per card",
+      description: "Rewards, fees, benefits, exclusions",
+    },
+    {
+      icon: CalendarClock,
+      value: formatVerifiedDate(lastVerifiedAt),
+      label: "Last verified",
+      description: "Continually re-checked against issuer sites",
+    },
+    {
+      icon: BadgeCheck,
+      value: "Ad-free",
+      label: "No affiliate bias",
+      description: "Direct bank links only",
+    },
+  ]
+
   return (
     <section className="py-20 bg-gradient-to-r from-primary to-accent relative overflow-hidden">
-      {/* Background pattern */}
       <div className="absolute inset-0 opacity-10">
         <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
           <defs>
@@ -59,21 +69,17 @@ export function StatsSection() {
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-sm mb-4">
                 <stat.icon className="h-7 w-7 text-white" />
               </div>
-              <motion.p 
-                className="text-4xl font-bold text-white"
-                initial={{ scale: 0.5 }}
+              <motion.p
+                className="text-3xl sm:text-4xl font-bold text-white"
+                initial={{ scale: 0.8 }}
                 whileInView={{ scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
               >
                 {stat.value}
               </motion.p>
-              <p className="text-lg font-medium text-white/90 mt-1">
-                {stat.label}
-              </p>
-              <p className="text-sm text-white/70 mt-1">
-                {stat.description}
-              </p>
+              <p className="text-lg font-medium text-white/90 mt-1">{stat.label}</p>
+              <p className="text-sm text-white/70 mt-1">{stat.description}</p>
             </motion.div>
           ))}
         </div>

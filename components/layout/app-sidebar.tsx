@@ -16,6 +16,10 @@ import {
   Tag,
   Clock,
   ScrollText,
+  Calculator,
+  FileText,
+  Phone,
+  AlertOctagon,
 } from "lucide-react"
 import {
   Sheet,
@@ -53,6 +57,17 @@ const RESOURCES: SidebarLink[] = [
   { href: "/offers", name: "Offers", icon: Tag, description: "Live merchant offers" },
   { href: "/rewards/expiry", name: "Reward Expiry", icon: Clock, description: "Track expiring rewards" },
   { href: "/methodology", name: "Methodology", icon: ScrollText, description: "How we score cards" },
+]
+
+const CALCULATORS: SidebarLink[] = [
+  { href: "/tools/interest-calculator", name: "Interest Calculator", icon: Calculator, description: "Carry-balance simulator" },
+  { href: "/tools/emi-calculator", name: "EMI Calculator", icon: Calculator, description: "No-cost vs interest EMI" },
+]
+
+const SAFETY: SidebarLink[] = [
+  { href: "/apply/documents", name: "Documents Required", icon: FileText, description: "KYC checklist by profile" },
+  { href: "/safety/helplines", name: "Helplines", icon: Phone, description: "Bank customer support" },
+  { href: "/safety/fraud-guide", name: "Fraud Response", icon: AlertOctagon, description: "What to do if compromised" },
 ]
 
 function Section({
@@ -117,7 +132,9 @@ export function AppSidebar() {
         <nav className="space-y-6">
           <Section title="Main" links={PRIMARY} pathname={pathname} onClose={close} />
           <Section title="Tools" links={TOOLS} pathname={pathname} onClose={close} />
+          <Section title="Calculators" links={CALCULATORS} pathname={pathname} onClose={close} />
           <Section title="Resources" links={RESOURCES} pathname={pathname} onClose={close} />
+          <Section title="Safety" links={SAFETY} pathname={pathname} onClose={close} />
         </nav>
       </SheetContent>
     </Sheet>
