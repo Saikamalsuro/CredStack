@@ -5,7 +5,9 @@ import { createPublicClient } from "@/lib/db/public-client"
 import { createServerClient } from "@/lib/db/server"
 import { getOffersByCardSlug } from "@/lib/db/offers"
 import { isCardWishlisted } from "@/lib/db/wishlist"
+import { getCardReviewSummary, getCardReviews, getExpertReviews, REVIEW_GATE } from "@/lib/db/reviews"
 import { CardDetailsClient } from "./card-details-client"
+import { ReviewsSection } from "./reviews-section"
 
 interface CardDetailsPageProps {
   params: Promise<{ id: string }>
@@ -53,20 +55,46 @@ export default async function CardDetailsPage({ params }: CardDetailsPageProps) 
     data: { user },
   } = await supabase.auth.getUser()
 
-  const [similarCards, dataLastVerifiedAt, offers, wishlisted] = await Promise.all([
+  const [similarCards, dataLastVerifiedAt, offers, wishlisted, dbCard] = await Promise.all([
     getSimilarCards(id, 12),
     getVerificationDate(id),
     getOffersByCardSlug(id, 9),
     user ? isCardWishlisted(user.id, id) : Promise.resolve(false),
+    (async () => {
+      const supabase = createPublicClient()
+      const { data } = await supabase.from("cards").select("id").eq("slug", id).maybeSingle()
+      return data
+    })(),
   ])
 
+  const [reviewSummary, reviews, expertReviews] = dbCard
+    ? await Promise.all([
+        getCardReviewSummary(dbCard.id),
+        getCardReviews(dbCard.id, 20),
+        getExpertReviews(dbCard.id),
+      ])
+    : [{ count: 0, average: 0, distribution: [] }, [], []]
+
   return (
-    <CardDetailsClient
-      card={card}
-      similarCards={similarCards}
-      dataLastVerifiedAt={dataLastVerifiedAt}
-      offers={offers}
-      isWishlisted={wishlisted}
-    />
+    <>
+      <CardDetailsClient
+        card={card}
+        similarCards={similarCards}
+        dataLastVerifiedAt={dataLastVerifiedAt}
+        offers={offers}
+        isWishlisted={wishlisted}
+      />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-12">
+        <ReviewsSection
+          cardSlug={card.id}
+          cardName={card.name}
+          summary={reviewSummary}
+          reviews={reviews}
+          expertReviews={expertReviews}
+          isAuthed={Boolean(user)}
+          reviewGate={REVIEW_GATE}
+        />
+      </div>
+    </>
   )
 }

@@ -18,6 +18,10 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { FileText, History, AlertCircle } from "lucide-react"
 import type { CardChangeRow } from "@/lib/db/card-changelog"
+import type { MilestoneProgress } from "@/lib/db/milestones"
+import type { UpgradeNudge } from "@/lib/db/upgrade-nudge"
+import { MilestoneWidget } from "@/components/dashboard/milestone-widget"
+import { UpgradeNudgeWidget } from "@/components/dashboard/upgrade-nudge-widget"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -84,6 +88,8 @@ interface DashboardClientProps {
   recentTransactions: DashboardTransaction[]
   upcomingPayments: DashboardUpcomingPayment[]
   recentChanges?: CardChangeRow[]
+  milestones?: MilestoneProgress[]
+  upgradeNudges?: UpgradeNudge[]
   totals: DashboardStatTotals
 }
 
@@ -94,6 +100,8 @@ export function DashboardClient({
   recentTransactions,
   upcomingPayments,
   recentChanges = [],
+  milestones = [],
+  upgradeNudges = [],
   totals,
 }: DashboardClientProps) {
   const stats = [
@@ -482,6 +490,26 @@ export function DashboardClient({
                 </CardContent>
               </Card>
             </motion.div>
+
+            {milestones.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.45 }}
+              >
+                <MilestoneWidget milestones={milestones} />
+              </motion.div>
+            )}
+
+            {upgradeNudges.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+              >
+                <UpgradeNudgeWidget nudges={upgradeNudges} />
+              </motion.div>
+            )}
 
             {recentChanges.length > 0 && (
               <motion.div

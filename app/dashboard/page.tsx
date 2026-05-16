@@ -10,6 +10,8 @@ import {
 import { getUpcomingPayments } from "@/lib/db/card-payments"
 import { getRecentChangesForCards } from "@/lib/db/card-changelog"
 import { getLoungeVisits } from "@/lib/db/lounge-visits"
+import { getMilestoneProgress } from "@/lib/db/milestones"
+import { getUpgradeNudges } from "@/lib/db/upgrade-nudge"
 import { DashboardClient } from "./dashboard-client"
 
 function formatRelativeDate(iso: string): string {
@@ -48,6 +50,11 @@ export default async function DashboardPage() {
     (v) => v.visitDate >= yearStart
   ).length
 
+  const [milestones, upgradeNudges] = await Promise.all([
+    getMilestoneProgress(user.id),
+    getUpgradeNudges(user.id),
+  ])
+
   // Phase 2 fallback: if user has no real cards, show top 3 catalog cards as preview
   // so the dashboard isn't blank for first-time users.
   const userCards = userCardRows.length > 0
@@ -81,6 +88,8 @@ export default async function DashboardPage() {
       recentTransactions={recentTransactions}
       upcomingPayments={upcomingPayments}
       recentChanges={recentChanges}
+      milestones={milestones}
+      upgradeNudges={upgradeNudges}
       totals={{
         totalSpending,
         totalRewards,
