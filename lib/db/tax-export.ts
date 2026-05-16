@@ -1,28 +1,12 @@
 import { createServerClient } from './server'
+import type {
+  TaxYearReport,
+  TaxYearTransaction,
+  TaxYearCategoryAgg,
+} from './tax-export-types'
 
-export interface TaxYearTransaction {
-  date: string
-  merchant: string
-  category: string
-  amount: number
-  cardName: string
-}
-
-export interface TaxYearCategoryAgg {
-  category: string
-  count: number
-  total: number
-}
-
-export interface TaxYearReport {
-  fyStart: string
-  fyEnd: string
-  totalSpend: number
-  totalRewards: number
-  forexSpend: number
-  byCategory: TaxYearCategoryAgg[]
-  transactions: TaxYearTransaction[]
-}
+export type { TaxYearReport, TaxYearTransaction, TaxYearCategoryAgg }
+export { toCsv } from './tax-export-format'
 
 function paiseToRupees(p: number | null | undefined): number {
   return Math.round((p ?? 0) / 100)
@@ -86,26 +70,4 @@ export async function getTaxYearReport(userId: string, fyStartYear: number): Pro
     byCategory,
     transactions: txns,
   }
-}
-
-export function toCsv(report: TaxYearReport): string {
-  const lines: string[] = []
-  lines.push(`Financial Year,${report.fyStart} to ${report.fyEnd}`)
-  lines.push('')
-  lines.push(`Total spend (₹),${report.totalSpend}`)
-  lines.push(`Total rewards (₹),${report.totalRewards}`)
-  lines.push(`Forex spend (₹),${report.forexSpend}`)
-  lines.push('')
-  lines.push('Category,Transactions,Total (₹)')
-  for (const c of report.byCategory) {
-    lines.push(`${c.category},${c.count},${c.total}`)
-  }
-  lines.push('')
-  lines.push('Date,Card,Merchant,Category,Amount (₹)')
-  for (const t of report.transactions) {
-    const m = t.merchant.replace(/[,"\n]/g, ' ').trim()
-    const c = t.cardName.replace(/[,"\n]/g, ' ').trim()
-    lines.push(`${t.date},${c},${m},${t.category},${t.amount}`)
-  }
-  return lines.join('\n')
 }
