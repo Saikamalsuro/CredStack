@@ -1,4 +1,4 @@
-import type { CreditCard, CardCategory, CardNetwork } from '@/lib/data/cards'
+import type { CreditCard, CardCategory, CardNetwork, CardTier } from '@/lib/data/cards'
 import type { Tables } from './types'
 
 export type CardRow = Tables<'cards'> & {
@@ -50,5 +50,6 @@ export function rowToCard(row: CardRow): CreditCard {
     cardColor: row.card_color_gradient,
     featured: row.featured,
     popular: row.popular,
+    tier: (row as unknown as { tier: CardTier | null }).tier ?? null,
   }
 }

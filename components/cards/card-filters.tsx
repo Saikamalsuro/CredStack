@@ -22,7 +22,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import type { CardCategory, CardNetwork } from "@/lib/data/cards"
+import type { CardCategory, CardNetwork, CardTier } from "@/lib/data/cards"
 
 interface CardFiltersProps {
   searchQuery: string
@@ -31,6 +31,8 @@ interface CardFiltersProps {
   onCategoryChange: (categories: CardCategory[]) => void
   selectedNetworks: CardNetwork[]
   onNetworkChange: (networks: CardNetwork[]) => void
+  selectedTiers: CardTier[]
+  onTierChange: (tiers: CardTier[]) => void
   maxAnnualFee: number | null
   onMaxAnnualFeeChange: (fee: number | null) => void
   noAnnualFee: boolean
@@ -42,6 +44,15 @@ interface CardFiltersProps {
   totalCards: number
   filteredCount: number
 }
+
+const tiers: { value: CardTier; label: string }[] = [
+  { value: "entry", label: "Entry" },
+  { value: "lifestyle", label: "Lifestyle" },
+  { value: "premium", label: "Premium" },
+  { value: "super_premium", label: "Super premium" },
+  { value: "secured", label: "Secured (FD-backed)" },
+  { value: "student", label: "Student" },
+]
 
 const categories: { value: CardCategory; label: string }[] = [
   { value: "travel", label: "Travel" },
@@ -364,6 +375,8 @@ export function CardFiltersSidebar({
   onCategoryChange,
   selectedNetworks,
   onNetworkChange,
+  selectedTiers,
+  onTierChange,
   maxAnnualFee,
   onMaxAnnualFeeChange,
   noAnnualFee,
@@ -384,6 +397,14 @@ export function CardFiltersSidebar({
       onNetworkChange(selectedNetworks.filter((n) => n !== network))
     } else {
       onNetworkChange([...selectedNetworks, network])
+    }
+  }
+
+  const toggleTier = (tier: CardTier) => {
+    if (selectedTiers.includes(tier)) {
+      onTierChange(selectedTiers.filter((t) => t !== tier))
+    } else {
+      onTierChange([...selectedTiers, tier])
     }
   }
 
@@ -430,6 +451,28 @@ export function CardFiltersSidebar({
                   className="text-sm font-normal cursor-pointer"
                 >
                   {network.label}
+                </Label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Tier */}
+        <div>
+          <h4 className="font-medium text-sm text-foreground mb-3">Card Tier</h4>
+          <div className="space-y-2">
+            {tiers.map((tier) => (
+              <div key={tier.value} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`sidebar-tier-${tier.value}`}
+                  checked={selectedTiers.includes(tier.value)}
+                  onCheckedChange={() => toggleTier(tier.value)}
+                />
+                <Label
+                  htmlFor={`sidebar-tier-${tier.value}`}
+                  className="text-sm font-normal cursor-pointer"
+                >
+                  {tier.label}
                 </Label>
               </div>
             ))}
