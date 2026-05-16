@@ -4,7 +4,10 @@ import { createAdminClient } from '@/lib/db/admin'
 export const expireOldOffers = inngest.createFunction(
   {
     id: 'expire-old-offers',
-    triggers: [{ cron: '0 3 * * *' }],
+    triggers: [
+      { event: 'offers.expire.requested' },
+      { cron: '0 3 * * *' },
+    ],
   },
   async () => {
     const supabase = createAdminClient()

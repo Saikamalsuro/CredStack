@@ -3,7 +3,7 @@ import { StaticPageShell } from "@/components/layout/static-page-shell"
 import { Mail, MessageSquare, Bug, Shield } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Contact — CredStack",
+  title: "Contact",
   description: "How to reach CredStack for support, partnerships, security disclosures, or feedback.",
 }
 

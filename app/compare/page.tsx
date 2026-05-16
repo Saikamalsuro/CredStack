@@ -6,7 +6,7 @@ import { CompareClient } from "./compare-client"
 import type { CreditCard } from "@/lib/data/cards"
 
 export const metadata: Metadata = {
-  title: "Compare credit cards side-by-side — CredStack",
+  title: "Compare credit cards side-by-side",
   description: "Compare any two Indian credit cards on rewards, fees, lounge access, and net annual value.",
 }
 

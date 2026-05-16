@@ -26,22 +26,48 @@ const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cred-stack.vercel.app'
+
 export const metadata: Metadata = {
-  title: 'CredStack - Smart Credit Card Intelligence',
-  description: 'Compare, analyze, and optimize your credit card usage with AI-powered recommendations. Find the best rewards, cashback, and benefits tailored to your spending.',
-  keywords: ['credit card', 'rewards', 'cashback', 'compare', 'AI recommendations', 'fintech'],
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'CredStack — Smart Indian Credit Card Comparison',
+    template: '%s · CredStack',
+  },
+  description:
+    'Compare 80+ Indian credit cards, analyse your spending with AI, and find the card that earns you the most. Free, independent, and built for India.',
+  keywords: ['credit card', 'India', 'rewards', 'cashback', 'compare', 'AI advisor', 'fintech'],
   authors: [{ name: 'CredStack' }],
-  generator: 'v0.app',
+  applicationName: 'CredStack',
+  openGraph: {
+    type: 'website',
+    locale: 'en_IN',
+    url: SITE_URL,
+    siteName: 'CredStack',
+    title: 'CredStack — Smart Indian Credit Card Comparison',
+    description:
+      'Compare 80+ Indian credit cards, analyse your spending with AI, and find the card that earns you the most.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CredStack — Smart Indian Credit Card Comparison',
+    description:
+      'Compare 80+ Indian credit cards, analyse your spending with AI, and find the card that earns you the most.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   icons: {
     icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
+      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
+      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
     ],
     apple: '/apple-icon.png',
   },

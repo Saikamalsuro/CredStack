@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import type { ReactNode } from "react"
 
 export const metadata: Metadata = {
-  title: "Statement Analyzer — CredStack",
+  title: "Statement Analyzer",
   description: "Upload your credit card statement (PDF). We categorise transactions and surface where to save.",
 }
 

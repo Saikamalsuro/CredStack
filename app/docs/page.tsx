@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Mail } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "API Docs — CredStack",
+  title: "API Docs",
   description: "Programmatic access to CredStack data.",
 }
 
