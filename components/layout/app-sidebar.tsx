@@ -30,6 +30,7 @@ import {
   ClipboardList,
   Gift,
   Lock,
+  Building2,
 } from "lucide-react"
 import {
   Sheet,
@@ -73,6 +74,7 @@ const TOOLS: SidebarLink[] = [
 ]
 
 const RESOURCES: SidebarLink[] = [
+  { href: "/banks", name: "Banks", icon: Building2, description: "Browse by issuer" },
   { href: "/offers", name: "Offers", icon: Tag, description: "Live merchant offers" },
   { href: "/rewards/expiry", name: "Reward Expiry", icon: Clock, description: "Track expiring rewards" },
   { href: "/methodology", name: "Methodology", icon: ScrollText, description: "How we score cards" },

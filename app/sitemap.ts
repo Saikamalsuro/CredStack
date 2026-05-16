@@ -13,6 +13,7 @@ const STATIC_PATHS = [
   { path: "/eligibility", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/offers", priority: 0.6, changeFrequency: "daily" as const },
   { path: "/methodology", priority: 0.5, changeFrequency: "monthly" as const },
+  { path: "/banks", priority: 0.6, changeFrequency: "weekly" as const },
   { path: "/tools/interest-calculator", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/tools/emi-calculator", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/apply/documents", priority: 0.6, changeFrequency: "monthly" as const },
