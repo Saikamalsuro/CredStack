@@ -1,8 +1,14 @@
+import type { Metadata } from "next"
 import { Suspense } from "react"
 import { getAllExtendedCards } from "@/lib/db/cards-extended"
 import { computeNetAnnualValue, DEFAULT_PROFILE } from "@/lib/ai/scoring"
 import { CompareClient } from "./compare-client"
 import type { CreditCard } from "@/lib/data/cards"
+
+export const metadata: Metadata = {
+  title: "Compare credit cards side-by-side — CredStack",
+  description: "Compare any two Indian credit cards on rewards, fees, lounge access, and net annual value.",
+}
 
 export const revalidate = 3600
 

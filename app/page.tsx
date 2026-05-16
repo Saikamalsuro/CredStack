@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { HeroSection } from "@/components/home/hero-section"
 import { FeaturedCardsSection } from "@/components/home/featured-cards-section"
 import { CategorySection } from "@/components/home/category-section"
@@ -6,6 +7,12 @@ import { StatsSection } from "@/components/home/stats-section"
 import { CTASection } from "@/components/home/cta-section"
 import { getCards, getFeaturedCards, getPopularCards } from "@/lib/db/cards"
 import { createPublicClient } from "@/lib/db/public-client"
+
+export const metadata: Metadata = {
+  title: "CredStack — Smart Indian Credit Card Comparison",
+  description:
+    "Compare 80+ Indian credit cards, analyse your spending with AI, and find the card that earns you the most. Free, independent, and built for India.",
+}
 
 export const revalidate = 3600
 

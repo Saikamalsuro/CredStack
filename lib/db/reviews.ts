@@ -23,6 +23,7 @@ export interface ExpertReview {
   id: string
   reviewerName: string
   reviewerTitle: string | null
+  shortSummary: string | null
   body: string
   rating: number | null
   pros: string[]
@@ -95,6 +96,7 @@ export async function getExpertReviews(cardId: string): Promise<ExpertReview[]> 
     id: row.id,
     reviewerName: row.reviewer_name,
     reviewerTitle: row.reviewer_title,
+    shortSummary: row.short_summary ?? null,
     body: row.body,
     rating: row.rating ? Number(row.rating) : null,
     pros: row.pros ?? [],
