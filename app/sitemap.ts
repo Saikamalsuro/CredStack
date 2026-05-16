@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next"
 import { getCards } from "@/lib/db/cards"
 import { REWARD_PROGRAMS } from "@/lib/data/reward-programs"
+import { ARTICLES } from "@/lib/data/academy"
 
 const STATIC_PATHS = [
   { path: "/", priority: 1.0, changeFrequency: "weekly" as const },
@@ -22,6 +23,7 @@ const STATIC_PATHS = [
   { path: "/tools/points-converter", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/learn/first-credit-card", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/learn/rewards", priority: 0.7, changeFrequency: "monthly" as const },
+  { path: "/learn", priority: 0.7, changeFrequency: "weekly" as const },
 ]
 
 // Card changelog pages are appended dynamically below per active card.
@@ -66,5 +68,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }))
 
-  return [...staticEntries, ...cardEntries, ...programEntries]
+  const articleEntries: MetadataRoute.Sitemap = ARTICLES.map((a) => ({
+    url: `${base}/learn/${a.slug}`,
+    lastModified: new Date(a.publishedAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }))
+
+  return [...staticEntries, ...cardEntries, ...programEntries, ...articleEntries]
 }
