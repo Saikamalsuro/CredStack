@@ -326,6 +326,343 @@ export const ARTICLES: AcademyArticle[] = [
       { href: '/learn/annual-fee-vs-lifetime-free', label: 'When to pay annual fee' },
     ],
   },
+  {
+    slug: 'optimising-across-multiple-cards',
+    level: 'intermediate',
+    title: 'Optimising spend across multiple cards',
+    excerpt:
+      'Two well-chosen cards beat one premium card. Three is usually the ceiling. Here is how to assign each card a job.',
+    readMinutes: 5,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'The single-card maximalist mindset is a trap. Indian credit card rewards are heavily category-locked. The best earner on dining is rarely the best on fuel. Splitting spend across 2-3 cards earns 1.5-2× what a single card can.',
+      },
+      {
+        heading: 'The 3-card archetype',
+        list: [
+          'Workhorse — broad-category earn (HDFC Diners Black, ICICI Emeralde, Axis Atlas). Covers everything not specifically routed.',
+          'Cashback specialist — flat % on online (Axis ACE 5% on bill pay, Cashback SBI 5% on online). Used for utilities + subscriptions.',
+          'Travel forex zero — IDFC FIRST WOW or Scapia. Triggers only on international + airline bookings.',
+        ],
+      },
+      {
+        heading: 'Routing rules to bake into your wallet',
+        list: [
+          'Amazon → ICICI Amazon Pay or Flipkart Axis (depending on which platform).',
+          'Swiggy / Zomato → Swiggy HDFC (10% in-app) or Amex SmartEarn (10X).',
+          'Fuel → BPCL Octane SBI or IndianOil HDFC. Generic cards lose 4-6%.',
+          'International → 0% forex card always. 3.5% markup eats every reward.',
+          'Insurance / utilities → cashback card (Axis ACE, Cashback SBI). Most rewards programmes exclude these.',
+        ],
+      },
+      {
+        heading: 'Why three is the ceiling',
+        body:
+          'Past three cards: mental overhead exceeds reward gain for most users. Tracking due dates, milestones, and category caps becomes a part-time job. Four+ only makes sense if you have automation (CredStack dashboard, app reminders).',
+      },
+      {
+        heading: 'Common mistake',
+        body:
+          'Applying for a 4th card chasing welcome bonus, then forgetting it. Inactive cards still impact CIBIL credit-age scoring. Either use it monthly or close it after 12 months.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/optimizer', label: 'Best card per transaction tool' },
+      { href: '/dashboard/cards', label: 'Manage your portfolio' },
+      { href: '/learn/utilization-and-credit-score', label: 'Why utilisation matters' },
+    ],
+  },
+  {
+    slug: 'emi-on-credit-cards',
+    level: 'intermediate',
+    title: 'EMI on credit cards — when it makes sense, when it does not',
+    excerpt:
+      '"No-cost EMI" rarely is. Convert-to-EMI on existing balance can be a debt trap. Here is how to read the fine print.',
+    readMinutes: 5,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'Credit card EMI converts a single purchase into 3-24 monthly instalments. Three flavours exist: no-cost EMI (merchant subsidised), interest-bearing EMI (set rate), and convert-to-EMI (after the fact on outstanding).',
+      },
+      {
+        heading: 'No-cost EMI mechanics',
+        body:
+          'The "no-cost" claim is true on the interest line — but processing fee (1-2% of purchase value) + 18% GST on that fee is added at the start. Effective interest rate on a 6-month no-cost EMI is typically 4-8% p.a.',
+        list: [
+          'Better than carrying balance at 36-42% APR.',
+          'Worse than paying upfront if you have the cash.',
+          'Usually disables reward points on the EMI portion. Verify before opting in.',
+        ],
+      },
+      {
+        heading: 'Interest-bearing EMI',
+        body:
+          'Charged at 13-16% p.a. on flat-rate basis (lower effective rate than carrying full balance). Use when the purchase is essential and you genuinely cannot pay in full. Never use to fund discretionary spend.',
+      },
+      {
+        heading: 'Convert-to-EMI trap',
+        body:
+          'Banks SMS you "convert your ₹50K bill to EMI" after the statement generates. Rates are 14-18% p.a. flat. This locks you into a multi-month debt repayment. It is better than minimum-due interest (36-42%) but far worse than a personal loan (10-13%).',
+      },
+      {
+        heading: 'Pre-closure',
+        body:
+          'Most card EMIs can be pre-closed. Foreclosure fee is typically 2-3% of outstanding. Always check terms before opting in — pre-close ability is what separates a forgivable EMI from a debt trap.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/tools/emi-calculator', label: 'EMI calculator — no-cost vs interest' },
+      { href: '/tools/interest-calculator', label: 'Carry-balance simulator' },
+      { href: '/learn/how-credit-cards-work', label: 'How interest is charged' },
+    ],
+  },
+  {
+    slug: 'rupay-visa-mastercard-amex',
+    level: 'intermediate',
+    title: 'RuPay vs Visa vs Mastercard vs Amex — which network actually matters',
+    excerpt:
+      'The network on the back of your card decides acceptance, forex behaviour, and UPI support. Pick deliberately, not by default.',
+    readMinutes: 4,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'A card has two faces: the issuer (bank) and the network. The network handles payment routing. In India, four networks dominate, and they are not interchangeable.',
+      },
+      {
+        heading: 'RuPay',
+        list: [
+          'Domestic payment network run by NPCI.',
+          'Only network with UPI support on credit cards.',
+          'International acceptance limited — works in UAE, Singapore, Nepal, Bhutan; spotty elsewhere.',
+          'Lower interchange fees, which means lower rewards in many cases.',
+          'Best for: domestic-only spenders who want UPI on credit card.',
+        ],
+      },
+      {
+        heading: 'Visa',
+        list: [
+          'Global default. Acceptance virtually everywhere except a few US-only merchants.',
+          'Most Indian premium cards (HDFC Infinia, Axis Reserve) issue on Visa Signature/Infinite tiers.',
+          'Strong fraud protection programmes.',
+          'Best for: travellers and global e-commerce.',
+        ],
+      },
+      {
+        heading: 'Mastercard',
+        list: [
+          'Parity with Visa in most respects.',
+          'Slightly better acceptance in Europe, slightly weaker in some emerging markets.',
+          'World Elite tier rivals Visa Infinite for perks.',
+          'Best for: indistinguishable from Visa for most users. Tiebreaker.',
+        ],
+      },
+      {
+        heading: 'American Express',
+        list: [
+          'Issued directly by Amex (no separate bank in most cases) or as co-brand.',
+          'High discount rates → fewer merchants accept it. ~85% in Tier 1, ~50% in Tier 2.',
+          'Strongest dining programme (50% off at partner restaurants).',
+          'Membership Rewards points among most flexible.',
+          'Best for: secondary card for premium spenders. Always carry a Visa/MC backup.',
+        ],
+      },
+      {
+        heading: 'How to pick',
+        body:
+          'If you want UPI on credit + only domestic spend, pick RuPay. If you travel or shop globally, pick Visa or MC. If you spend on dining + want best transferable points, add Amex as second card. Default cards are now offered with choice of network at issuance — exercise it.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/cards', label: 'Browse cards by network' },
+      { href: '/learn/forex-markup-explained', label: 'Why forex markup matters' },
+      { href: '/learn/rewards', label: 'Reward programmes by issuer' },
+    ],
+  },
+  {
+    slug: 'insurance-benefits-on-cards',
+    level: 'intermediate',
+    title: 'Insurance benefits on credit cards — what is real, what is theatre',
+    excerpt:
+      'Premium cards advertise ₹3 Crore air accident cover. In practice, payouts require the ticket be bought on the card. Here is the actual coverage map.',
+    readMinutes: 4,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'Most premium Indian credit cards bundle insurance: air accident, travel inconvenience, purchase protection. The sum-insured numbers are eye-catching. The terms are restrictive.',
+      },
+      {
+        heading: 'Air accident insurance',
+        body:
+          'Cards advertise ₹1-6 Crore. The catch:',
+        list: [
+          'Ticket must be bought using the card.',
+          'Death must occur within 90-180 days of accident.',
+          'Beneficiary needs to file claim with airline FIR + bank docs within the deadline (varies 90-180 days).',
+          'Coverage doesn\'t stack — if you have three cards with ₹1 Cr each, you don\'t get ₹3 Cr. Most insurers pay the highest single policy.',
+        ],
+      },
+      {
+        heading: 'Travel inconvenience',
+        body:
+          'Covers baggage delay, lost baggage, missed connection. Typical limits:',
+        list: [
+          'Baggage delay > 4 hours: ₹10K-25K.',
+          'Lost baggage: ₹50K-2L.',
+          'Trip cancellation due to medical emergency: ₹1-3L.',
+          'Always read sum-insured + deductible. Many require flight delay > 6 hours to trigger.',
+        ],
+      },
+      {
+        heading: 'Purchase protection',
+        body:
+          'Covers damage / theft of items bought on card. Usually 90-day window. Excludes consumables, jewellery, cash. Real value: <₹50K range items.',
+      },
+      {
+        heading: 'What is theatre',
+        list: [
+          'Cyber fraud cover — RBI zero-liability already covers this if reported in 3 working days.',
+          'Credit shield (loan death cover) — overlaps with most term policies. Don\'t pay extra for it.',
+          'Lost card liability — also covered by RBI rules.',
+        ],
+      },
+      {
+        heading: 'How to file',
+        body:
+          'Card insurance claims go through the bank\'s nodal insurance partner (usually ICICI Lombard, Tata AIG, or HDFC Ergo). Bank customer service can route you. Start within 7 days of incident; collect doctor reports, FIR, original tickets.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/cards', label: 'Browse cards with insurance' },
+      { href: '/safety/fraud-guide', label: 'RBI zero-liability rules' },
+      { href: '/learn/annual-fee-vs-lifetime-free', label: 'When to pay premium fee' },
+    ],
+  },
+  {
+    slug: 'optimal-portfolio-high-spend',
+    level: 'advanced',
+    title: 'Optimal credit card portfolio for high spenders (₹15L+/year)',
+    excerpt:
+      'At ₹15L+ annual spend, single-card optimisation breaks down. The right 3-4 card stack pulls 5-7% effective return. Here is the architecture.',
+    readMinutes: 6,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'Above ₹15L annual spend you hit category caps on most premium cards (Infinia caps at 50K RPs/month on SmartBuy, Magnus capped at ₹1L/month airline transfers). Single card maxes around 3.5%. A 3-4 card portfolio can sustain 5-7%.',
+      },
+      {
+        heading: 'The premium stack',
+        list: [
+          'Anchor: HDFC Infinia or Amex Platinum Reserve — covers premium category multipliers + lounge + concierge.',
+          'Travel: Axis Atlas or Amex Platinum Travel — milestone vouchers + transferable miles.',
+          'Online: ICICI Amazon Pay or Flipkart Axis — 5% on the duopoly.',
+          'Forex: IDFC FIRST WOW or Scapia — 0% on every international spend.',
+        ],
+      },
+      {
+        heading: 'Routing playbook',
+        list: [
+          'Until ₹50K/mo on Infinia SmartBuy: route all flights through SmartBuy at 10X.',
+          'Beyond cap: switch to Atlas → Marriott transfer for hotel-heavy travel, Amex MR → KrisFlyer for premium-cabin flights.',
+          'Monthly milestone on Platinum Reserve: hit ₹50K/mo regardless of category. 2% guaranteed.',
+          'Annual milestone on Platinum Travel: ₹1.9L + ₹4L = ₹40K + ₹14.5K + Taj voucher.',
+          'Insurance, utilities, education: Axis ACE for 2% flat. Skip premium cards (no rewards anyway).',
+        ],
+      },
+      {
+        heading: 'Annual fee math',
+        body:
+          'Aggregate fees: Infinia ₹12.5K + Atlas ₹5K + Plat Reserve ₹66K + WOW ₹0 = ₹83.5K. At ₹15L spend, you need 5.5% effective return just to break even. Realistic return on this stack: 7-9%, so ₹1.1-1.4L value over fees.',
+      },
+      {
+        heading: 'Retention game',
+        body:
+          'Premium cards play retention bonus games. Before paying renewal fee, call the bank. Infinia and Plat Reserve typically offer:',
+        list: [
+          'Annual fee waived if last-year spend > ₹8L (Infinia) / ₹15L (Plat Reserve).',
+          'Bonus reward points (5K-15K MR / RP) to retain.',
+          'Milestone reset (Plat Travel will sometimes credit milestone vouchers despite under-spend).',
+        ],
+      },
+      {
+        heading: 'When to add a 5th card',
+        body:
+          'Only if you have a category that none of your 4 covers well. Example: heavy fuel spend (₹5K+/month) → add BPCL Octane SBI for 5%. Heavy Zomato/Swiggy (₹15K+/month) → add Swiggy HDFC for 10%.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/optimizer', label: 'Best card per transaction' },
+      { href: '/advisor', label: 'AI advisor for your profile' },
+      { href: '/learn/rewards', label: 'Compare reward programmes' },
+    ],
+  },
+  {
+    slug: 'premium-card-retention',
+    level: 'advanced',
+    title: 'Premium card retention — the conversation that saves ₹50K',
+    excerpt:
+      'Premium cards charge ₹10-66K annual fee. Most issuers waive or offer bonuses to retain you. Knowing how to ask is worth a year of milestone earn.',
+    readMinutes: 4,
+    publishedAt: '2026-05-16',
+    sections: [
+      {
+        body:
+          'Premium card retention is a structured negotiation. Issuers track your spend, profitability, and likelihood-to-cancel. They have pre-authorised retention budgets. Most customers never ask, so they never get the offer.',
+      },
+      {
+        heading: 'When to call',
+        body:
+          'Mid-month, 30-45 days before your annual fee debits. The relationship manager has more authority before the fee posts than after.',
+      },
+      {
+        heading: 'What to ask for (in order)',
+        list: [
+          'Full annual fee waiver — works if you spent above the published threshold (typically 6-10x the fee).',
+          'Partial waiver + bonus points (50% fee + 10K MR / RPs) — common compromise.',
+          'Milestone credit — bank waives milestone shortfall and credits the voucher anyway.',
+          'Upgrade to higher tier — fee absorbed into new product (e.g. Diners Privilege → Diners Black if spend justifies).',
+          'Downgrade to lower-fee variant — last resort, preserves account age but resets perks.',
+        ],
+      },
+      {
+        heading: 'Scripts that work',
+        list: [
+          '"My annual fee debits next month. I have spent ₹X this year. Can you check my retention eligibility?"',
+          '"I am considering closing this card. Before I do, I wanted to check if there is anything you can offer."',
+          '"I see [Bank Y] is offering [competing card] with [bonus]. What can you do to keep me on this card?"',
+        ],
+      },
+      {
+        heading: 'Issuers ranked by retention generosity',
+        list: [
+          'HDFC (Infinia, Diners Black): ~70% offer retention. Spend > ₹8L makes it nearly automatic.',
+          'Amex (Platinum, Plat Reserve): ~80% offer milestone resets + bonus MR.',
+          'Axis (Magnus, Reserve, Atlas): ~50%. More aggressive on competing-offer mentions.',
+          'ICICI (Emeralde Private Metal): ~40%. Less retention-friendly.',
+          'SBI (ELITE): ~30%. Usually only offers spend-threshold waiver.',
+        ],
+      },
+      {
+        heading: 'What kills retention offers',
+        list: [
+          'Late payments in last 12 months.',
+          'High utilisation (>50% consistently).',
+          'Multiple add-on cards on premium variants (low cardholder profitability).',
+          'New customer (<12 months on the product).',
+        ],
+      },
+    ],
+    relatedLinks: [
+      { href: '/learn/optimal-portfolio-high-spend', label: 'Optimal high-spender portfolio' },
+      { href: '/safety/helplines', label: 'Issuer helpline directory' },
+      { href: '/cards', label: 'Premium cards in catalogue' },
+    ],
+  },
 ]
 
 export function getArticle(slug: string): AcademyArticle | undefined {
