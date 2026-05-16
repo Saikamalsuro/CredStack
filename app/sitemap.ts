@@ -16,6 +16,10 @@ const STATIC_PATHS = [
   { path: "/apply/documents", priority: 0.6, changeFrequency: "monthly" as const },
   { path: "/safety/helplines", priority: 0.6, changeFrequency: "monthly" as const },
   { path: "/safety/fraud-guide", priority: 0.6, changeFrequency: "monthly" as const },
+  { path: "/safety/virtual-cards", priority: 0.6, changeFrequency: "monthly" as const },
+  { path: "/safety/rbi-updates", priority: 0.6, changeFrequency: "weekly" as const },
+  { path: "/tools/points-converter", priority: 0.7, changeFrequency: "monthly" as const },
+  { path: "/learn/first-credit-card", priority: 0.7, changeFrequency: "monthly" as const },
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
